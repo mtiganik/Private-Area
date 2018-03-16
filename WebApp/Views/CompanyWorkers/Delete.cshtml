@@ -1,0 +1,51 @@
+﻿@model Domain.CompanyWorker
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>CompanyWorker</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkerName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.WorkerName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkerPhone)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.WorkerPhone)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.WorkerEmail)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.WorkerEmail)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EntryAdded)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EntryAdded)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CompanyWorkerPosition)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CompanyWorkerPosition.CompanyWorkerPositionId)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="CompanyWorkerId" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

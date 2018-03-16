@@ -1,0 +1,39 @@
+﻿@model Domain.UserStatus
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>UserStatus</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="UserStatusId" />
+            <div class="form-group">
+                <label asp-for="UserStatusName" class="control-label"></label>
+                <input asp-for="UserStatusName" class="form-control" />
+                <span asp-validation-for="UserStatusName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserStatusNameEst" class="control-label"></label>
+                <input asp-for="UserStatusNameEst" class="form-control" />
+                <span asp-validation-for="UserStatusNameEst" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

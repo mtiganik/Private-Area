@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Domain.ProjectType>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProjectTypeName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProjectTypeNameEst)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProjectTypeComments)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProjectTypeCommentsEst)
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectTypeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectTypeNameEst)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectTypeComments)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectTypeCommentsEst)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ProjectTypeId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ProjectTypeId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ProjectTypeId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
