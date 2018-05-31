@@ -1,0 +1,86 @@
+﻿@model WebApp.Areas.Users.Models.UserEditViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>@Resources.WebApp.Areas.Users.Users.Edit.Title</h2> 
+
+<h4>@Resources.WebApp.Areas.Users.Users.Edit.Description</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ApplicationUser.FirstName" class="control-label"></label>
+                <input asp-for="ApplicationUser.FirstName" class="form-control" />
+                <span asp-validation-for="ApplicationUser.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApplicationUser.LastName" class="control-label"></label>
+                <input asp-for="ApplicationUser.LastName" class="form-control" />
+                <span asp-validation-for="ApplicationUser.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApplicationUser.Address" class="control-label"></label>
+                <input asp-for="ApplicationUser.Address" class="form-control" />
+                <span asp-validation-for="ApplicationUser.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApplicationUser.Skype" class="control-label"></label>
+                <input asp-for="ApplicationUser.Skype" class="form-control" />
+                <span asp-validation-for="ApplicationUser.Skype" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApplicationUser.Comments" class="control-label"></label>
+                <input asp-for="ApplicationUser.Comments" class="form-control" />
+                <span asp-validation-for="ApplicationUser.Comments" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ApplicationUser.Department" class="control-label"></label>
+                <select asp-for="ApplicationUser.DepartmentId" class="form-control" asp-items="Model.DepartmentSelectList"></select>
+                <span asp-validation-for="ApplicationUser.Department" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ApplicationUser.UserName" class="control-label"></label>
+                <input asp-for="ApplicationUser.UserName" class="form-control" />
+                <span asp-validation-for="ApplicationUser.UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApplicationUser.PhoneNumber" class="control-label"></label>
+                <input asp-for="ApplicationUser.PhoneNumber" class="form-control" />
+                <span asp-validation-for="ApplicationUser.PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <input type="hidden" asp-for="ApplicationUser.UserStatusId" />
+            <input type="hidden" asp-for="ApplicationUser.Id" />
+            <input type="hidden" asp-for="ApplicationUser.UserName" />
+            <input type="hidden" asp-for="ApplicationUser.NormalizedUserName" />
+            <input type="hidden" asp-for="ApplicationUser.NormalizedEmail" />
+            <input type="hidden" asp-for="ApplicationUser.EmailConfirmed" />
+            <input type="hidden" asp-for="ApplicationUser.PasswordHash" />
+            <input type="hidden" asp-for="ApplicationUser.SecurityStamp" />
+            <input type="hidden" asp-for="ApplicationUser.ConcurrencyStamp" />
+            <input type="hidden" asp-for="ApplicationUser.PhoneNumberConfirmed" />
+            <input type="hidden" asp-for="ApplicationUser.TwoFactorEnabled" />
+            <input type="hidden" asp-for="ApplicationUser.LockoutEnd" />
+            <input type="hidden" asp-for="ApplicationUser.LockoutEnabled" />
+            <input type="hidden" asp-for="ApplicationUser.AccessFailedCount" />
+
+            <div class="form-group">
+                <input type="submit" value="@Resources.WebApp.Areas.Users.Users.Edit.Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">@Resources.WebApp.Areas.Users.Users.Edit.Back</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

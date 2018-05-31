@@ -11,12 +11,13 @@ namespace Domain
         public int ProjectId { get; set; }
         public Project Project { get; set; }
 
-        public int ApplicationUserId { get; set; }
+        public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
         public int PositionNameId { get; set; }
         public PositionName PositionName { get; set; }
 
         public bool IsMarketer { get; set; }
+
     }
 }

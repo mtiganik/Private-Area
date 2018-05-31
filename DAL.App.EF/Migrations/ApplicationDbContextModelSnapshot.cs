@@ -17,7 +17,7 @@ namespace DAL.App.EF.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
+                .HasAnnotation("ProductVersion", "2.0.3-rtm-10026")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Domain.ApplicationUser", b =>
@@ -35,6 +35,8 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<int>("DepartmentId");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -68,16 +70,17 @@ namespace DAL.App.EF.Migrations
                     b.Property<string>("Skype")
                         .HasMaxLength(100);
 
-                    b.Property<int>("SpecialityId");
-
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasMaxLength(256);
 
                     b.Property<int>("UserStatusId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -86,8 +89,6 @@ namespace DAL.App.EF.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("SpecialityId");
 
                     b.HasIndex("UserStatusId");
 
@@ -135,6 +136,24 @@ namespace DAL.App.EF.Migrations
                     b.HasKey("CompanyFieldOfActivityId");
 
                     b.ToTable("CompanyFieldOfActivities");
+                });
+
+            modelBuilder.Entity("Domain.CompanyProject", b =>
+                {
+                    b.Property<int>("CompanyProjectId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CompanyId");
+
+                    b.Property<int>("ProjectId");
+
+                    b.HasKey("CompanyProjectId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("CompanyProjects");
                 });
 
             modelBuilder.Entity("Domain.CompanyType", b =>
@@ -203,14 +222,14 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("ContactId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("ApplicationUserId");
-
-                    b.Property<string>("ApplicationUserId1");
+                    b.Property<string>("ApplicationUserId");
 
                     b.Property<string>("Comments")
                         .HasMaxLength(400);
 
                     b.Property<int>("CompanyId");
+
+                    b.Property<int?>("CompanyWorkerId");
 
                     b.Property<DateTime>("ContactDate");
 
@@ -218,19 +237,23 @@ namespace DAL.App.EF.Migrations
 
                     b.Property<bool>("IsNewContactNeeded");
 
-                    b.Property<DateTime>("NewContactDate");
+                    b.Property<DateTime?>("NewContactDate");
 
-                    b.Property<int>("NewContactType");
+                    b.Property<string>("NewContactType");
 
-                    b.Property<int>("WorkerId");
+                    b.Property<int>("ProjectId");
 
                     b.HasKey("ContactId");
 
-                    b.HasIndex("ApplicationUserId1");
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("CompanyId");
 
+                    b.HasIndex("CompanyWorkerId");
+
                     b.HasIndex("ContactTypeId");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Contacts");
                 });
@@ -251,14 +274,28 @@ namespace DAL.App.EF.Migrations
                     b.ToTable("ContactTypes");
                 });
 
+            modelBuilder.Entity("Domain.Department", b =>
+                {
+                    b.Property<int>("DepartmentId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("DepartmentName")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("DepartmentNameEst")
+                        .HasMaxLength(100);
+
+                    b.HasKey("DepartmentId");
+
+                    b.ToTable("Departments");
+                });
+
             modelBuilder.Entity("Domain.Position", b =>
                 {
                     b.Property<int>("PositionId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("ApplicationUserId");
-
-                    b.Property<string>("ApplicationUserId1");
+                    b.Property<string>("ApplicationUserId");
 
                     b.Property<bool>("IsMarketer");
 
@@ -268,7 +305,7 @@ namespace DAL.App.EF.Migrations
 
                     b.HasKey("PositionId");
 
-                    b.HasIndex("ApplicationUserId1");
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("PositionNameId");
 
@@ -337,22 +374,6 @@ namespace DAL.App.EF.Migrations
                     b.HasKey("ProjectTypeId");
 
                     b.ToTable("ProjectTypes");
-                });
-
-            modelBuilder.Entity("Domain.Speciality", b =>
-                {
-                    b.Property<int>("SpecialityId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("SpecialityName")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("SpecialityNameEst")
-                        .HasMaxLength(100);
-
-                    b.HasKey("SpecialityId");
-
-                    b.ToTable("Specialities");
                 });
 
             modelBuilder.Entity("Domain.UserStatus", b =>
@@ -481,9 +502,9 @@ namespace DAL.App.EF.Migrations
 
             modelBuilder.Entity("Domain.ApplicationUser", b =>
                 {
-                    b.HasOne("Domain.Speciality", "Speciality")
-                        .WithMany()
-                        .HasForeignKey("SpecialityId")
+                    b.HasOne("Domain.Department", "Department")
+                        .WithMany("ApplicationUsers")
+                        .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Domain.UserStatus", "UserStatus")
@@ -505,15 +526,28 @@ namespace DAL.App.EF.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("Domain.CompanyProject", b =>
+                {
+                    b.HasOne("Domain.Company", "Company")
+                        .WithMany("CompanyProjects")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Domain.Project", "Project")
+                        .WithMany("CompanyProjects")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("Domain.CompanyWorker", b =>
                 {
-                    b.HasOne("Domain.Company")
+                    b.HasOne("Domain.Company", "Company")
                         .WithMany("CompanyWorkers")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Domain.CompanyWorkerPosition", "CompanyWorkerPosition")
-                        .WithMany()
+                        .WithMany("CompanyWorkers")
                         .HasForeignKey("CompanyWorkerPositionId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -521,25 +555,34 @@ namespace DAL.App.EF.Migrations
             modelBuilder.Entity("Domain.Contact", b =>
                 {
                     b.HasOne("Domain.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId1");
+                        .WithMany("Contacts")
+                        .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("Domain.Company", "Company")
                         .WithMany("CompanyContacts")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("Domain.CompanyWorker", "CompanyWorker")
+                        .WithMany()
+                        .HasForeignKey("CompanyWorkerId");
+
                     b.HasOne("Domain.ContactType", "ContactType")
                         .WithMany()
                         .HasForeignKey("ContactTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Domain.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Domain.Position", b =>
                 {
                     b.HasOne("Domain.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId1");
+                        .WithMany("Positions")
+                        .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("Domain.PositionName", "PositionName")
                         .WithMany("Positions")

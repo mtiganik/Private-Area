@@ -1,0 +1,323 @@
+﻿@model WebApp.Areas.Users.Models.CompanyDetailsViewModel
+@using System.Threading
+@inject UserManager<Domain.ApplicationUser> UserManager
+
+
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+@{bool isEnglish;
+    if (Thread.CurrentThread.CurrentUICulture.Name.ToString() == "en-GB")
+    {
+        isEnglish = true;
+    }
+    else { isEnglish = false; } }
+
+<div>
+    <h4>@Model.SelectedCompany.CompanyName</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SelectedCompany.CompanyName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SelectedCompany.CompanyName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SelectedCompany.CompanyRegistrationName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SelectedCompany.CompanyRegistrationName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SelectedCompany.CompanyWebsite)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SelectedCompany.CompanyWebsite)
+        </dd>
+        <dt>
+            @Resources.WebApp.Areas.Users.Companies.Details.FieldOfActivity
+        </dt>
+        <dd>
+            @(isEnglish ? Html.DisplayFor(model => model.SelectedCompany.CompanyFieldOfActivity.ActivityName) : Html.DisplayFor(model => model.SelectedCompany.CompanyFieldOfActivity.ActivityNameEst))
+        </dd>
+        <dt>
+            @Resources.WebApp.Areas.Users.Companies.Details.CompanyType
+        </dt>
+        <dd>
+            @(isEnglish ? Html.DisplayFor(model => model.SelectedCompany.CompanyType.CompanyTypeName) : Html.DisplayFor(model => model.SelectedCompany.CompanyType.CompanyTypeNameEst))
+        </dd>
+    </dl>
+    <a asp-action="Edit" asp-route-id="@Model.SelectedCompany.CompanyId">@Resources.Shared.Edit</a> 
+
+
+    <h4>@Resources.WebApp.Areas.Users.Companies.Details.CompanyWorkers</h4>
+    @if (Model.SelectedCompany.CompanyWorkers.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Resources.WebApp.Areas.Users.Companies.Details.Name
+                    </th>
+                    <th>
+                        @Resources.WebApp.Areas.Users.Companies.Details.PhoneNumber
+                    </th>
+                    <th>
+                        @Resources.WebApp.Areas.Users.Companies.Details.Email
+                    </th>
+                    <th>
+                        @Resources.WebApp.Areas.Users.Companies.Details.Position
+                    </th>
+                    <th>
+                        @Resources.WebApp.Areas.Users.Companies.Details.Added
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.SelectedCompany.CompanyWorkers)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.WorkerName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.WorkerPhone)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.WorkerEmail)
+                        </td>
+                        <td>
+                            @(isEnglish ? Html.DisplayFor(modelItem => item.CompanyWorkerPosition.PositionName) : Html.DisplayFor(modelItem => item.CompanyWorkerPosition.PositionNameEst))
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.EntryAdded)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-controller="CompanyWorkers" asp-route-id="@item.CompanyWorkerId" asp-route-fromProject="@item.CompanyId">@Resources.Shared.Edit</a> |
+                            <a asp-action="Delete" asp-controller="CompanyWorkers" asp-route-id="@item.CompanyWorkerId" asp-route-fromProject="@item.CompanyId">@Resources.Shared.Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    }
+    else
+    {
+        <p>@Resources.WebApp.Areas.Users.Companies.Details.NoWorkers! </p>
+
+
+    }
+        <button id="AddWorker">@Resources.WebApp.Areas.Users.Companies.Details.AddWorker</button>
+
+    <div id="NewWorker" hidden="hidden">
+        <div class="row">
+            <div class="col-md-4">
+
+                <form method="post" asp-action="AddWorker" asp-route-id="@Model.SelectedCompany.CompanyId">
+                    <input type="hidden" asp-for="@Model.AddNewWorker.CompanyId" value="@Model.SelectedCompany.CompanyId" />
+                    <div class="form-group">
+                        <label asp-for="@Model.AddNewWorker.WorkerName" class="control-label"></label>
+                        <input asp-for="@Model.AddNewWorker.WorkerName" class="form-control" />
+                        <span asp-validation-for="@Model.AddNewWorker.WorkerName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="@Model.AddNewWorker.CompanyWorkerPosition" class="control-label"></label>
+                        <select asp-for="@Model.AddNewWorker.CompanyWorkerPositionId" class="form-control" asp-items="@Model.WorkerPositionSelectList"></select>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="@Model.AddNewWorker.WorkerPhone" class="control-label"></label>
+                        <input asp-for="@Model.AddNewWorker.WorkerPhone" class="form-control" />
+                        <span asp-validation-for="@Model.AddNewWorker.WorkerPhone" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="@Model.AddNewWorker.WorkerEmail" class="control-label"></label>
+                        <input asp-for="@Model.AddNewWorker.WorkerEmail" class="form-control" />
+                        <span asp-validation-for="@Model.AddNewWorker.WorkerEmail" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="@Resources.WebApp.Areas.Users.Companies.Details.AddNew" class="btn btn-default" />
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Contacts.Any())
+    {
+    <h4>@Resources.WebApp.Areas.Users.Companies.Details.PreviousContacts</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Resources.WebApp.Areas.Users.Companies.Details.WhoContacted
+                    </th>
+                    <th>
+                        @Resources.WebApp.Areas.Users.Companies.Details.Who
+                    </th>
+                    <th>
+                        @Resources.WebApp.Areas.Users.Companies.Details.WhatProject
+                    </th>
+                    <th>
+                        @Resources.WebApp.Areas.Users.Companies.Details.When
+                    </th>
+                    <th>
+                        @Resources.WebApp.Areas.Users.Companies.Details.Result
+                    </th>
+                    <th>
+                        @Resources.WebApp.Areas.Users.Companies.Details.NewContactNeeded
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Contacts)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ApplicationUser.FullName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CompanyWorker.WorkerName) (@(isEnglish ? Html.DisplayFor(modelItem => item.ContactType.ContactTypeName) : Html.DisplayFor(modelItem => item.ContactType.ContactTypeNameEst)))
+                        </td>
+                        <td>
+                            @(isEnglish ? Html.DisplayFor(modelItem => item.Project.ProjectName) : Html.DisplayFor(modelItem => item.Project.ProjectNameEst))
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ContactDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Comments)
+                        </td>
+                        <td>
+                            @if (item.IsNewContactNeeded == true)
+                            {
+                            <span>@Resources.WebApp.Areas.Users.Companies.Details.yes, </span>@Html.DisplayFor(modelItem => item.NewContactDate)
+
+                            }
+                            else
+                            {
+                            <span>@Resources.WebApp.Areas.Users.Companies.Details.no</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-controller="Contacts" asp-route-id="@item.ContactId" asp-route-fromProject="@item.CompanyId">@Resources.Shared.Edit</a> |
+                            @if ( UserManager.GetUserId(User) == item.ApplicationUserId || User.IsInRole("Admin")   )
+                            {
+                            <a asp-action="Delete" asp-controller="Contacts" asp-route-id="@item.ContactId" asp-route-fromProject="@item.CompanyId">@Resources.Shared.Delete</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>@Resources.WebApp.Areas.Users.Companies.Details.noContacts</p>
+    }
+        <button id="AddContact">@Resources.WebApp.Areas.Users.Companies.Details.AddContact</button>
+    <div id="NewContact" hidden="hidden">
+        <div class="row">
+            <div class="col-md-4">
+                <form method="post" asp-action="AddContact" asp-route-id="@Model.SelectedCompany.CompanyId">
+                    <input type="hidden" asp-for="@Model.AddNewContact.CompanyId" value="@Model.SelectedCompany.CompanyId" />
+
+                    <div class="form-group">
+                        <label asp-for="@Model.AddNewContact.CompanyWorker" class="control-label"></label>
+                        <select asp-for="@Model.AddNewContact.CompanyWorkerId" class="form-control" asp-items="@Model.CompanyWorkerSelectList"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="@Model.AddNewContact.Project" class="control-label"></label>
+                        <select asp-for="@Model.AddNewContact.ProjectId" class="form-control" asp-items="@Model.ProjectSelectList"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="@Model.AddNewContact.ContactType" class="control-label"></label>
+                        <select asp-for="@Model.AddNewContact.ContactTypeId" class="form-control" asp-items="@Model.ContactTypeSelectList"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="@Model.AddNewContact.Comments" class="control-label"></label>
+                        <input asp-for="@Model.AddNewContact.Comments" class="form-control" />
+                        <span asp-validation-for="@Model.AddNewContact.Comments" class="text-danger"></span>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label>
+                                <input asp-for="@Model.AddNewContact.IsNewContactNeeded" id="newContactCheckBox" /> @Html.DisplayNameFor(model => model.AddNewContact.IsNewContactNeeded)
+                            </label>
+                        </div>
+                    </div>
+
+
+                    <div id="hiddenNewContactStuff" hidden="hidden">
+                        <div class="form-group">
+                            <label asp-for="@Model.AddNewContact.NewContactDate" class="control-label"></label>
+                            <input asp-for="@Model.AddNewContact.NewContactDate" class="form-control" />
+                            <span asp-validation-for="@Model.AddNewContact.NewContactDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="@Model.AddNewContact.NewContactType" class="control-label"></label>
+                            <input asp-for="@Model.AddNewContact.NewContactType" class="form-control" />
+                            <span asp-validation-for="@Model.AddNewContact.NewContactType" class="text-danger"></span>
+                        </div>
+
+
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="@Resources.WebApp.Areas.Users.Companies.Details.AddNew" class="btn btn-default" />
+                    </div>
+
+                </form>
+
+
+
+            </div>
+        </div>
+    </div>
+    <div>
+        <a asp-action="Index">@Resources.WebApp.Areas.Users.Companies.Details.FullList</a>
+    </div>
+</div>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+
+            $('#AddWorker').click(function () {
+                $("#NewWorker").toggle();
+            });
+            $('#AddContact').click(function () {
+                $("#NewContact").toggle();
+
+            });
+
+            $('#newContactCheckBox').click(function () {
+
+                if ($('#newContactCheckBox').is(':checked')) {
+                    $("#hiddenNewContactStuff").show();
+                } else {
+                    $("#hiddenNewContactStuff").hide();
+
+                }
+
+
+            })
+        });
+
+    </script>
+}

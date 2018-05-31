@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Domain.Company>
+@using System.Threading
+
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>@Resources.WebApp.Areas.Users.Companies.Index.IndexView</h2>
+
+@{bool isEnglish;
+    if (Thread.CurrentThread.CurrentUICulture.Name.ToString() == "en-GB")
+    {
+        isEnglish = true;
+    }
+    else { isEnglish = false; } }
+
+
+<p>
+    <a asp-action="Create">@Resources.WebApp.Areas.Users.Companies.Index.CreateNew</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyRegistrationName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyWebsite)
+            </th>
+            <th>
+                @Resources.WebApp.Areas.Users.Companies.Index.CompanyFieldOfActivity
+            </th>
+            <th>
+                @Resources.WebApp.Areas.Users.Companies.Index.CompanyType
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyRegistrationName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CompanyWebsite)
+                </td>
+                <td>
+                    @(isEnglish ? Html.DisplayFor(modelItem => item.CompanyFieldOfActivity.ActivityName) : Html.DisplayFor(modelItem => item.CompanyFieldOfActivity.ActivityNameEst))
+                </td>
+                <td>
+                    @(isEnglish ? Html.DisplayFor(modelItem => item.CompanyType.CompanyTypeName) : Html.DisplayFor(modelItem => item.CompanyType.CompanyTypeNameEst))
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.CompanyId">@Resources.Shared.Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CompanyId">@Resources.Shared.Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

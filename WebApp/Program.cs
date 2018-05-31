@@ -30,7 +30,8 @@ namespace WebApp
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
                     AppDataInitializator.InitializeAppDatabase(context);
-                    AppDataInitializator.InitializeIdentity(userManager, roleManager);
+                    AppDataInitializator.InitializeIdentity(userManager, roleManager, context);
+                    AppDataInitializator.InitializeComplexAppDatabase(context);
                 }
                 catch (Exception ex)
                 {

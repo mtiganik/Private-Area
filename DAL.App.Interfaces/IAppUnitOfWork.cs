@@ -24,7 +24,7 @@ namespace DAL.App.Interfaces
         IRepository<PositionName> PositionNames { get; }
         IRepository<Project> Projects { get; }
         IRepository<ProjectType> ProjectTypes { get; }
-        IRepository<Speciality> Specialities { get; }
+        IRepository<Department> Departments { get; }
         IRepository<UserStatus> UserStatuses { get; }
 
 

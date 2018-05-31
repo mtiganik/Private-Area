@@ -1,0 +1,30 @@
+﻿@model Domain.ContactType
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>@Resources.Common.Details</h2>
+
+<div>
+    <h4>ContactType</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ContactTypeName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ContactTypeName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ContactTypeNameEst)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ContactTypeNameEst)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ContactTypeId">@Resources.Common.Edit</a> |
+    <a asp-action="Index">@Resources.Common.BackToList</a>
+</div>

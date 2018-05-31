@@ -1,0 +1,32 @@
+﻿@model WebApp.Areas.Admin.Models.PositionCreateEditViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>@Resources.Common.Edit</h2>
+
+<h4>Position</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Position.PositionId" />
+
+            @Html.Partial("_CreateEdit", Model)
+
+            <div class="form-group">
+                <input type="submit" value="@Resources.Common.Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index" asp-controller="Projects">@Resources.Common.BackToList</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

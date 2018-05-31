@@ -1,0 +1,30 @@
+﻿@model Domain.Department
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>@Resources.Common.Details</h2>
+
+<div>
+    <h4>Department</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DepartmentName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DepartmentName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DepartmentNameEst)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DepartmentNameEst)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.DepartmentId">@Resources.Common.Edit</a> |
+    <a asp-action="Index">@Resources.Common.BackToList</a>
+</div>

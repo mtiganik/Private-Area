@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Domain.PositionName>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>@Resources.Common.Index</h2>
+
+<p>
+    <a asp-action="Create">@Resources.Common.CreateNew</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.PositionNameEng)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PositionNameEst)
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PositionNameEng)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PositionNameEst)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.PositionNameId">@Resources.Common.Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.PositionNameId">@Resources.Common.Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.PositionNameId">@Resources.Common.Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

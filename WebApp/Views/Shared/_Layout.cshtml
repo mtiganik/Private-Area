@@ -8,6 +8,8 @@
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap-datetime-picker/css/bootstrap-datetimepicker.min.css" />
+
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -17,83 +19,56 @@
     </environment>
 </head>
 <body>
+
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
 
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">WebApp</a>
 
-                        <li class="dropdown">
-                            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </button>
-                            <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">WebApp</a>
-                        </li>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
 
-                        <li class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Company
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" asp-area="" asp-controller="Companies" asp-action="Index">Companies</a>
-                                <a class="dropdown-item"  asp-area="" asp-controller="CompanyFieldOfActivities" asp-action="Index">CompanyFieldOfActivities</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="CompanyWorkers" asp-action="Index">CompanyWorkers</a>
-                                <a class="dropdown-item"  asp-area="" asp-controller="CompanyWorkerPositions" asp-action="Index">CompanyWorkerPositions</a>
-                                <a class="dropdown-item"  asp-area="" asp-controller="CompanyTypes" asp-action="Index">CompanyTypes</a>
-                            </div>
-                        </li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index">@Resources.WebApp.Views.Shared._Layout.Home</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="About">@Resources.WebApp.Views.Shared._Layout.About</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">@Resources.WebApp.Views.Shared._Layout.Contact</a></li>
 
-                        <li class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Contacts
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <button class="dropdown-item"><a asp-area="" asp-controller="Contacts" asp-action="Index">Contacts</a></button>
-                                <button class="dropdown-item"><a asp-area="" asp-controller="ContactTypes" asp-action="Index">ContactTypes</a></button>
-                            </div>
-                        </li>
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <li><a asp-area="Admin" asp-controller="Home" asp-action="Index">Admin</a></li>
+                    }
+                    @if (User.Identity.IsAuthenticated && (User.IsInRole("User") || User.IsInRole("Marketer")))
+                    {
+                        <li><a asp-area="Users" asp-controller="Home" asp-action="Index">PA</a></li>
+                    }
+                </ul>
+                @await Html.PartialAsync("_LoginPartial")
 
-                        <li class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Projects
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <button class="dropdown-item"><a asp-area="" asp-controller="Projects" asp-action="Index">Projects</a></button>
-                                <button class="dropdown-item"><a asp-area="" asp-controller="ProjectTypes" asp-action="Index">ProjectTypes</a></button>
-                                <button class="dropdown-item"><a asp-area="" asp-controller="Positions" asp-action="Index">Positions</a></button>
-                                <button class="dropdown-item"><a asp-area="" asp-controller="PositionNames" asp-action="Index">PositionNames</a></button>
-                            </div>
-                        </li>
-
-                        <li class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Users
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <button class="dropdown-item"><a asp-area="" asp-controller="ApplicationUsers" asp-action="Index">Users</a></button>
-                                <button class="dropdown-item"><a asp-area="" asp-controller="Specialities" asp-action="Index">Specialities</a></button>
-                                <button class="dropdown-item"><a asp-area="" asp-controller="UserStatuses" asp-action="Index">UserStatuses</a></button>
-                            </div>
-                        </li>
-
-                        </ul>
-                        @await Html.PartialAsync("_LoginPartial")
-
-                    </div>
-                </div>
-                </div>
-</nav>
+            </div>
+        </div>
+    </nav>
     <div class="container body-content">
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2018 - WebApp</p>
+            <div class="row">
+                <div class="col-md-2">
+                    <p>&copy; 2018 - WebApp</p>
+                </div>
+                <div class="col-md-10 text-right">
+                    @await  Html.PartialAsync("_LanguageSelectionPartial")
+                </div>
+            </div>
         </footer>
     </div>
+
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -113,8 +88,19 @@
                 crossorigin="anonymous"
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
         </script>
+
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
+    <script src="~/lib/moment/moment-with-locales.min.js"></script>
+
+    <script src="~/lib/bootstrap-datetime-picker/js/bootstrap-datetimepicker.min.js"></script>
+
+
+
+    <script>
+        $('[type="datetime-local"]').datetimepicker();
+    </script>
+
 
     @RenderSection("Scripts", required: false)
 </body>

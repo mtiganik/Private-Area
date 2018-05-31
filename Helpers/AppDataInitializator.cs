@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using DAL.App.EF;
 using Domain;
 using Microsoft.AspNetCore.Identity;
@@ -10,21 +11,72 @@ namespace Helpers
     {
         public static void InitializeAppDatabase(ApplicationDbContext context)
         {
+            if (!context.CompanyWorkerPositions.Any())
+            {
+                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition
+                {
+                    PositionName = "HR",
+                    PositionNameEst = "Personalijuht"
+                });
+
+                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition
+                {
+                    PositionName = "Board Member",
+                    PositionNameEst = "juhatuse liige"
+                });
+
+                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition
+                {
+                    PositionName = "CEO",
+                    PositionNameEst = "Juhatuse esimees"
+                });
+
+                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition
+                {
+                    PositionName = "Marketer",
+                    PositionNameEst = "Müügiosakonna esindaja"
+                });
+
+                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition
+                {
+                    PositionName = "Secretary",
+                    PositionNameEst = "Sekretär"
+                });
+
+                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition
+                {
+                    PositionName = "IT person",
+                    PositionNameEst = "IT mees"
+                });
+
+                context.SaveChangesAsync();
+
+            }
+
             if (!context.ContactTypes.Any())
             {
                 context.ContactTypes.Add(new ContactType()
                 {
-                    ContactTypeName = "Skype"
+                    ContactTypeName = "Skype",
+                    ContactTypeNameEst= "Skype"
                 });
                 context.ContactTypes.Add(new ContactType()
                 {
-                    ContactTypeName = "Email"
+                    ContactTypeName = "Email",
+                    ContactTypeNameEst = "Email"
                 });
                 context.ContactTypes.Add(new ContactType()
                 {
-                    ContactTypeName = "Telephone"
+                    ContactTypeName = "Telephone",
+                    ContactTypeNameEst = "Telefonivestlus"
                 });
-                context.SaveChanges();
+                context.ContactTypes.Add(new ContactType()
+                {
+                    ContactTypeName = "Meeting",
+                    ContactTypeNameEst = "Kohtumine"
+                });
+
+                context.SaveChangesAsync();
             }
 
             if (!context.CompanyFieldOfActivities.Any())
@@ -48,6 +100,12 @@ namespace Helpers
                     ActivityName = "Party place",
                     ActivityNameEst = "Peokoht"
                 });
+                context.CompanyFieldOfActivities.Add(new CompanyFieldOfActivity
+                {
+                    ActivityName = "Transport",
+                    ActivityNameEst = "Transport"
+                });
+
             }
 
             if (!context.CompanyTypes.Any())
@@ -72,6 +130,12 @@ namespace Helpers
                     CompanyTypeName = "Business",
                     CompanyTypeNameEst = "Majandus"
                 });
+                context.CompanyTypes.Add(new CompanyType
+                {
+                    CompanyTypeName = "Company",
+                    CompanyTypeNameEst = "Firma"
+                });
+
             }
 
 
@@ -102,7 +166,16 @@ namespace Helpers
                     ProjectTypeCommentsEst = "Iga aastane organisatsiooni suvepäevade üritus. Sa pole elu näinud, kui seal pole olnud"
                 });
 
-               
+                context.ProjectTypes.Add(new ProjectType
+                {
+                    ProjectTypeName = "Winter Days",
+                    ProjectTypeNameEst = "Talvepäevad",
+                    ProjectTypeComments = "Annual organization WinterDays. If you havent been there, you haven't seen real life!",
+                    ProjectTypeCommentsEst = "Iga aastane organisatsiooni talvepäevade üritus. Sa pole elu näinud, kui seal pole olnud"
+                });
+
+                context.SaveChangesAsync().Wait();
+
             }
 
             if (!context.UserStatuses.Any())
@@ -133,41 +206,36 @@ namespace Helpers
                 context.UserStatuses.Add(new UserStatus
                 {
                     UserStatusName = "Alumni",
-                    UserStatusNameEst = "Alumni"
+                    UserStatusNameEst = "Vilistlane"
                 });
             }
 
-            if (!context.Specialities.Any())
+            if (!context.Departments.Any())
             {
-                context.Specialities.Add(new Speciality
+                context.Departments.Add(new Department
                 {
-                    SpecialityName = "IT",
-                    SpecialityNameEst = "IT"
+                    DepartmentName = "IT Department",
+                    DepartmentNameEst = "IT Teaduskond"
                 });
-                context.Specialities.Add(new Speciality
+                context.Departments.Add(new Department
                 {
-                    SpecialityName = "Engineering Physics",
-                    SpecialityNameEst = "Tehniline Füüsika"
+                    DepartmentName = "Engineering Department",
+                    DepartmentNameEst = "Inseneriteaduskond"
                 });
-                context.Specialities.Add(new Speciality
+                context.Departments.Add(new Department
                 {
-                    SpecialityName = "Business Management",
-                    SpecialityNameEst = "Avalik Haldus"
+                    DepartmentName = "Department of Science",
+                    DepartmentNameEst = "Loodusteaduskond"
                 });
-                context.Specialities.Add(new Speciality
+                context.Departments.Add(new Department
                 {
-                    SpecialityName = "Civil Engineering",
-                    SpecialityNameEst = "Ehitus"
+                    DepartmentName = "Department of Economics",
+                    DepartmentNameEst = "Majandusteaduskond"
                 });
-                context.Specialities.Add(new Speciality
+                context.Departments.Add(new Department
                 {
-                    SpecialityName = "Mechatronics",
-                    SpecialityNameEst = "Mehhatroonika"
-                });
-                context.Specialities.Add(new Speciality
-                {
-                    SpecialityName = "Electronics",
-                    SpecialityNameEst = "Elektroonika"
+                    DepartmentName = "Estonian Marine Academics",
+                    DepartmentNameEst = "Eesti mereakadeemia"
                 });
             }
 
@@ -208,18 +276,53 @@ namespace Helpers
                     PositionNameEng = "Food responsible",
                     PositionNameEst = "Toiduvastutaja"
                 });
-            }
 
+                context.SaveChangesAsync();
+            }
+            
+
+            if (!context.Projects.Any())
+            {
+                context.Projects.Add(new Project
+                {
+                    ProjectName = "Võti Tulevikku 2018",
+                    ProjectStartDate = new DateTime(2018, 3, 23),
+                    ProjectEndDate = new DateTime(2018, 3, 25),
+                    ProjectNameEst = "Võti Tulevikku 2018",
+                    ProjectType = context.ProjectTypes.Where(u => u.ProjectTypeName == "Job Fair").Single(),
+                });
+
+                context.Projects.Add(new Project
+                {
+                    ProjectName = "Summer Days 2018",
+                    ProjectStartDate = new DateTime(2018, 7, 15),
+                    ProjectEndDate = new DateTime(2018, 7, 16),
+                    ProjectNameEst = "Suvepäevad 2018",
+                    ProjectType = context.ProjectTypes.Where(u => u.ProjectTypeName == "Summer Days").Single(),
+                });
+
+                context.Projects.Add(new Project
+                {
+                    ProjectName = "Carreer Day 2017",
+                    ProjectStartDate = new DateTime(2017, 11, 23),
+                    ProjectEndDate = new DateTime(2017, 11, 24),
+                    ProjectNameEst = "Firmapäevad 2017",
+                    ProjectType = context.ProjectTypes.Where(u => u.ProjectTypeName == "Job Fair").Single(),
+                });
+                context.SaveChangesAsync();
+
+            }
 
         }
         private static readonly string[] Roles = new[]
         {
             "User",
+            "Marketer",
             "Admin"
         };
 
-        public static void InitializeIdentity(UserManager<ApplicationUser> userManager, 
-            RoleManager<IdentityRole> roleManager)
+        public static void InitializeIdentity(UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
         {
             foreach (var role in Roles)
             {
@@ -230,25 +333,177 @@ namespace Helpers
             }
 
             var userName = "admin@eesti.ee";
-            var userPass = "Foobar.foobar1";
+            var userPass = "qwerty";
 
-            if (userManager.FindByNameAsync(userName).Result == null)
+            if (!context.ApplicationUser.Any())
             {
-                var user = new ApplicationUser()
-                {
-                    UserName =  userName,
-                    Email = userName
-                };
+                //var user0 = new ApplicationUser { UserName = userName, Email = userName };
+                //var res = userManager.CreateAsync(user0, userPass).Result;
+                //if (res == IdentityResult.Success)
+                //{
+                //    foreach (var role in Roles)
+                //    {
+                //        userManager.AddToRoleAsync(user0, role).Wait();
+                //    }
+                //}
 
-                var res = userManager.CreateAsync(user, userPass).Result;
-                if (res == IdentityResult.Success)
+                //var user1 = context.ApplicationUser.Where(u => u.UserName == "mtiganik@gmail.com").Single();
+                var user1 = new ApplicationUser
+                {
+                    FirstName = "Mihkel",
+                    LastName = "Tiganik",
+                    Email = "mtiganik@gmail.com",
+                    Address = "Sitsi 15-6, Tallinn",
+                    Comments = "Like to Lead people",
+                    Department = context.Departments.Where(u => u.DepartmentName == "IT Department").Single(),
+                    Skype = "rohep2ike",
+                    PhoneNumber = "55655828",
+                    UserName = "mtiganik@gmail.com",
+                    UserStatus = context.UserStatuses.Where(u => u.UserStatusName == "Full member").Single(),
+
+                };
+                var res1 = userManager.CreateAsync(user1, userPass).Result;
+                if (res1 == IdentityResult.Success)
                 {
                     foreach (var role in Roles)
                     {
-                        userManager.AddToRoleAsync(user, role).Wait();
+                        userManager.AddToRoleAsync(user1, role).Wait();
                     }
                 }
+
+                var user2 = new ApplicationUser
+                {
+                    FirstName = "Liisa",
+                    LastName = "Kern",
+                    Email = "LiisaKern@gmail.com",
+                    Address = "Retke tee 8, 2401 Tallinn",
+                    Comments = "Motivated for marketing",
+                    Department = context.Departments.Where(u => u.DepartmentName == "Department of Science").Single(),
+                    Skype = "LiisaKern123",
+                    PhoneNumber = "5284532",
+                    UserName = "LiisaKern@gmail.com",
+                    UserStatus = context.UserStatuses.Where(u => u.UserStatusName == "Baby member").Single(),
+
+                };
+                var res2 = userManager.CreateAsync(user2, userPass).Result;
+                if (res2 == IdentityResult.Success)
+                {
+                    userManager.AddToRoleAsync(user2, Roles[0]).Wait();
+                    userManager.AddToRoleAsync(user2, Roles[1]).Wait();
+                }
+
+
+                var user3 = new ApplicationUser
+                {
+                    FirstName = "Tiit",
+                    LastName = "Kass",
+                    Email = "tiitkass@gmail.com",
+                    Address = "Lauresi tee 5",
+                    Comments = "I'm good guitar player",
+                    Department = context.Departments.Where(u => u.DepartmentName == "Department of Economics").Single(),
+                    Skype = "tkass",
+                    PhoneNumber = "55842974",
+                    UserName = "tiitkass@gmail.com",
+                    UserStatus = context.UserStatuses.Where(u => u.UserStatusName == "New member").Single(),
+
+                };
+                var res3 = userManager.CreateAsync(user3, userPass).Result;
+                if (res3 == IdentityResult.Success)
+                {
+                    userManager.AddToRoleAsync(user3, Roles[0]).Wait();
+                }
+
+                var user4 = new ApplicationUser
+                {
+                    FirstName = "Andres",
+                    LastName = "Kaver",
+                    Email = "akaver@gmail.com",
+                    Address = "Harjumaa",
+                    Comments = "IT",
+                    Department = context.Departments.Where(u => u.DepartmentName == "IT Department").Single(),
+                    Skype = "akaver",
+                    PhoneNumber = "65740213",
+                    UserName = "akaver@gmail.com",
+                    UserStatus = context.UserStatuses.Where(u => u.UserStatusName == "Alumni").Single(),
+
+                };
+                var res4 = userManager.CreateAsync(user4, userPass).Result;
+                if (res4 == IdentityResult.Success)
+                {
+                    userManager.AddToRoleAsync(user4, Roles[0]).Wait();
+                    userManager.AddToRoleAsync(user4, Roles[1]).Wait();
+                }
+
+
             }
         }
+
+        public static void InitializeComplexAppDatabase(ApplicationDbContext context)
+        {
+            if (!context.Positions.Any())
+            {
+                context.Positions.Add(new Position
+                {
+                    ProjectId = context.Projects.Single(u => u.ProjectName == "Võti Tulevikku 2018").ProjectId,
+                    PositionNameId = context.PositionNames.Single(u => u.PositionNameEng == "Project manager").PositionNameId,
+                    ApplicationUserId = context.ApplicationUser.Single(u => u.UserName == "mtiganik@gmail.com").Id,
+                    IsMarketer = true,
+
+                });
+
+                context.Positions.Add(new Position
+                {
+                    Project = context.Projects.Where(u => u.ProjectName == "Võti Tulevikku 2018").Single(),
+                    PositionName = context.PositionNames.Where(u => u.PositionNameEng == "Sales lead").Single(),
+                    ApplicationUser = context.ApplicationUser.Where(u => u.UserName == "LiisaKern@gmail.com").Single(),
+                    IsMarketer = true,
+                });
+
+                context.Positions.Add(new Position
+                {
+                    Project = context.Projects.Where(u => u.ProjectName == "Võti Tulevikku 2018").Single(),
+                    PositionName = context.PositionNames.Where(u => u.PositionNameEng == "Organizer").Single(),
+                    ApplicationUser = context.ApplicationUser.Where(u => u.UserName == "tiitkass@gmail.com").Single(),
+                    IsMarketer = false,
+                });
+
+                context.Positions.Add(new Position
+                {
+                    Project = context.Projects.Where(u => u.ProjectName == "Summer Days 2018").Single(),
+                    PositionName = context.PositionNames.Where(u => u.PositionNameEng == "Project manager").Single(),
+                    ApplicationUser = context.ApplicationUser.Where(u => u.UserName == "mtiganik@gmail.com").Single(),
+                    IsMarketer = false,
+                });
+
+                context.Positions.Add(new Position
+                {
+                    Project = context.Projects.Where(u => u.ProjectName == "Summer Days 2018").Single(),
+                    PositionName = context.PositionNames.Where(u => u.PositionNameEng == "Food responsible").Single(),
+                    ApplicationUser = context.ApplicationUser.Where(u => u.UserName == "akaver@gmail.com").Single(),
+                    IsMarketer = false,
+                });
+
+                context.Positions.Add(new Position
+                {
+                    Project = context.Projects.Where(u => u.ProjectName == "Carreer Day 2017").Single(),
+                    PositionName = context.PositionNames.Where(u => u.PositionNameEng == "Project manager").Single(),
+                    ApplicationUser = context.ApplicationUser.Where(u => u.UserName == "tiitkass@gmail.com").Single(),
+                    IsMarketer = true,
+                });
+
+                context.Positions.Add(new Position
+                {
+                    Project = context.Projects.Where(u => u.ProjectName == "Carreer Day 2017").Single(),
+                    PositionName = context.PositionNames.Where(u => u.PositionNameEng == "Organizer").Single(),
+                    ApplicationUser = context.ApplicationUser.Where(u => u.UserName == "mtiganik@gmail.com").Single(),
+                    IsMarketer = true,
+                });
+
+                context.SaveChangesAsync().Wait();
+            }
+        }
+
+
     }
+
 }
