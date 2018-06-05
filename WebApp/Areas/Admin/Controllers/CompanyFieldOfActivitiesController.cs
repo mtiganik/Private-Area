@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
-
+using WebApp.Areas.Admin.Models;
 
 namespace WebApp.Areas.Admin.Controllers
 {
@@ -26,7 +26,8 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: CompanyFieldOfActivities
         public async Task<IActionResult> Index()
         {
-            return View(await _context.CompanyFieldOfActivities.ToListAsync());
+            var res = _context.CompanyFieldOfActivities.Include(i => i.ActivityName).ThenInclude(i => i.Translations);
+            return View(await res.ToListAsync());
         }
 
         // GET: CompanyFieldOfActivities/Details/5
@@ -38,6 +39,8 @@ namespace WebApp.Areas.Admin.Controllers
             }
 
             var companyFieldOfActivity = await _context.CompanyFieldOfActivities
+                .Include(i => i.ActivityName)
+                    .ThenInclude( i => i.Translations)
                 .SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
             if (companyFieldOfActivity == null)
             {
@@ -54,19 +57,18 @@ namespace WebApp.Areas.Admin.Controllers
         }
 
         // POST: CompanyFieldOfActivities/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CompanyFieldOfActivityId,ActivityName,ActivityNameEst")] CompanyFieldOfActivity companyFieldOfActivity)
+        public async Task<IActionResult> Create( CompanyFieldOfActivityCreateEditVM vm)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(companyFieldOfActivity);
+                vm.CompanyFieldOfActivity.ActivityName = new MultiLangString(vm.ActivityName);
+                _context.Add(vm.CompanyFieldOfActivity);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(companyFieldOfActivity);
+            return View(vm);
         }
 
         // GET: CompanyFieldOfActivities/Edit/5
@@ -77,7 +79,10 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var companyFieldOfActivity = await _context.CompanyFieldOfActivities.SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
+            var companyFieldOfActivity = await _context.CompanyFieldOfActivities
+                .Include(i => i.ActivityName)
+                    .ThenInclude(i => i.Translations)
+                .SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
             if (companyFieldOfActivity == null)
             {
                 return NotFound();
@@ -86,13 +91,11 @@ namespace WebApp.Areas.Admin.Controllers
         }
 
         // POST: CompanyFieldOfActivities/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CompanyFieldOfActivityId,ActivityName,ActivityNameEst")] CompanyFieldOfActivity companyFieldOfActivity)
+        public async Task<IActionResult> Edit(int id, CompanyFieldOfActivityCreateEditVM vm)
         {
-            if (id != companyFieldOfActivity.CompanyFieldOfActivityId)
+            if (id != vm.CompanyFieldOfActivity.CompanyFieldOfActivityId)
             {
                 return NotFound();
             }
@@ -101,12 +104,20 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(companyFieldOfActivity);
+                                        vm.CompanyFieldOfActivity.ActivityName =
+                        _context.MultiLangStrings
+                            .Include(t => t.Translations)
+                            .FirstOrDefault(m =>
+                            m.MultiLangStringId == vm.CompanyFieldOfActivity.ActivityNameId) ?? new MultiLangString();
+                    vm.CompanyFieldOfActivity.ActivityName.SetTranslation(vm.ActivityName);
+
+
+                    _context.Update(vm.ActivityName);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CompanyFieldOfActivityExists(companyFieldOfActivity.CompanyFieldOfActivityId))
+                    if (!CompanyFieldOfActivityExists(vm.CompanyFieldOfActivity.CompanyFieldOfActivityId))
                     {
                         return NotFound();
                     }
@@ -117,7 +128,7 @@ namespace WebApp.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(companyFieldOfActivity);
+            return View(vm);
         }
 
         // GET: CompanyFieldOfActivities/Delete/5
@@ -128,7 +139,8 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var companyFieldOfActivity = await _context.CompanyFieldOfActivities
+            var companyFieldOfActivity = await _context.CompanyFieldOfActivities.Include(i => i.ActivityName)
+                .ThenInclude(i => i.Translations)
                 .SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
             if (companyFieldOfActivity == null)
             {
