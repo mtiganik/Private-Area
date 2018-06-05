@@ -1,0 +1,95 @@
+﻿@model Domain.Contact
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>@Resources.Shared.Edit</h2>
+
+<h4>@Resources.WebApp.Areas.Users.Contact.Edit.Contact</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" asp-route-fromProject="@ViewBag.fromProject">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ContactId" />
+            <input type="hidden" asp-for="ApplicationUserId" />
+            <input type="hidden" asp-for="CompanyId" />
+
+
+            <div class="form-group">
+                <label asp-for="ContactType" class="control-label"></label>
+                <select asp-for="ContactTypeId" class="form-control" asp-items="ViewBag.ContactTypeSelectList"></select>
+                <span asp-validation-for="ContactTypeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Project" class="control-label"></label>
+                <select asp-for="ProjectId" class="form-control" asp-items="ViewBag.ProjectSelectList"></select>
+                <span asp-validation-for="ProjectId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompanyWorker" class="control-label"></label>
+                <select asp-for="CompanyWorkerId" class="form-control" asp-items="ViewBag.CompanyWorkerSelectList"></select>
+                <span asp-validation-for="CompanyWorkerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comments" class="control-label"></label>
+                <input asp-for="Comments" class="form-control" />
+                <span asp-validation-for="Comments" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input id="checkbox" asp-for="IsNewContactNeeded" /> @Html.DisplayNameFor(model => model.IsNewContactNeeded)
+                    </label>
+                </div>
+            </div>
+            <div id="hiddenNewContactStuff" hidden="hidden">
+                <div class="form-group">
+                    <label asp-for="NewContactDate" class="control-label"></label>
+                    <input asp-for="NewContactDate" class="form-control" />
+                    <span asp-validation-for="NewContactDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="NewContactType" class="control-label"></label>
+                    <input asp-for="NewContactType" class="form-control" />
+                    <span asp-validation-for="NewContactType" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="@Resources.WebApp.Areas.Users.Contact.Edit.Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Details" asp-controller="Companies" asp-route-id="@ViewBag.fromProject">@Resources.WebApp.Areas.Users.Contact.Edit.Back</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(function () {
+
+            $('#newContactCheckBox').click(function () {
+                $("#hiddenNewContactStuff").toggle();
+
+            })
+            $('#checkbox').click(function () {
+
+                if ($('#checkbox').is(':checked')) {
+                    $("#hiddenNewContactStuff").show();
+                } else {
+                    $("#hiddenNewContactStuff").hide();
+
+                }
+            });
+
+            });
+
+    </script>
+
+}

@@ -1,0 +1,30 @@
+﻿@model WebApp.Areas.Admin.Models.PositionCreateEditViewModel
+
+<div class="form-group">
+    <label asp-for="Position.Project.ProjectName" class="control-label"></label>
+    <select asp-for="Position.ProjectId" class="form-control" asp-items="Model.ProjectsSelectList">
+        @if (Model.ProjectsSelectList.Count() > 1)
+        {
+            <option selected="selected" value="">Please Select</option>
+        }
+    </select>
+</div>
+<div class="form-group">
+    <label asp-for="Position.ApplicationUser.FullName" class="control-label"></label>
+    <select asp-for="Position.ApplicationUserId" class="form-control" asp-items="Model.ApplicationUserSelectList">
+        <option selected="selected" value="">Please Select</option>
+    </select>
+</div>
+<div class="form-group">
+    <label asp-for="Position.PositionNameId" class="control-label"></label>
+    <select asp-for="Position.PositionNameId" class="form-control" asp-items="Model.PositionNameSelectList">
+        <option selected="selected" value="">Please Select</option>
+    </select>
+</div>
+<div class="form-group">
+    <div class="checkbox">
+        <label>
+            <input asp-for="Position.IsMarketer" /> @Html.DisplayNameFor(model => model.Position.IsMarketer)
+        </label>
+    </div>
+</div>

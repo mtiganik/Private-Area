@@ -1,0 +1,31 @@
+﻿@model WebApp.Areas.Admin.Models.CompanyFieldOfActivityCreateEditVM
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>@Resources.Common.Create</h2>
+
+<h4>CompanyFieldOfActivity</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @Html.Partial("_CreateEdit", Model)
+
+            <div class="form-group">
+                <input type="submit" value="@Resources.Common.Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">@Resources.Common.BackToList</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

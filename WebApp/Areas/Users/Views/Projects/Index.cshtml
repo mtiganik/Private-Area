@@ -1,0 +1,132 @@
+﻿@model WebApp.Areas.Users.Models.ProjectsIndexViewModel
+@inject UserManager<Domain.ApplicationUser> UserManager
+@using Microsoft.AspNetCore.Identity
+@using System.Threading
+
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>@Resources.WebApp.Areas.Users.Projects.Index.Title</h2>
+
+@{bool isEnglish;
+    if (Thread.CurrentThread.CurrentUICulture.Name.ToString() == "en-GB")
+    {
+        isEnglish = true;
+    }
+    else { isEnglish = false; } }
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Projects.FirstOrDefault().ProjectName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Projects.FirstOrDefault().ProjectStartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Projects.FirstOrDefault().ProjectEndDate)
+            </th>
+            <th>
+                @Resources.WebApp.Areas.Users.Projects.Index.YourProject
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Projects.FirstOrDefault().ProjectType)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Projects)
+        {
+            string SelectedRow = "";
+            bool IsUserMarketer = false;
+            if (item.ProjectId.Equals(ViewData["UserName"]))
+            {
+                SelectedRow = "success";
+            }
+
+            <tr class="@SelectedRow">
+                <td>
+                    @(isEnglish ? Html.DisplayFor(modelItem => item.ProjectName) : @Html.DisplayFor(modelItem => item.ProjectNameEst))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProjectStartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProjectEndDate)
+                </td>
+                <td>
+
+                    @if (item.Positions.Exists(u => u.ApplicationUserId == UserManager.GetUserId(User)))
+                    {
+                        IsUserMarketer = true;
+                        if (item.Positions.Where(u => u.ApplicationUserId == UserManager.GetUserId(User)).Select(u => u.IsMarketer).Single()) {
+
+                    <p>@Resources.WebApp.Areas.Users.Projects.Index.IsMarketer</p>
+                        } else {
+                    <p>@Resources.WebApp.Areas.Users.Projects.Index.InTeam</p>
+                        }
+
+                    }
+                    else
+                    {
+                    <p>@Resources.WebApp.Areas.Users.Projects.Index.NotInTeam</p>
+                    }
+                </td>
+
+                <td>
+                    @(isEnglish ? Html.DisplayFor(modelItem => item.ProjectType.ProjectTypeName) : Html.DisplayFor(modelItem => item.ProjectType.ProjectTypeNameEst))
+                </td>
+                <td>
+                    <a asp-action="Index" asp-route-id="@item.ProjectId"> @Resources.Shared.Select </a> |
+                    @if (IsUserMarketer)
+                    {
+                    <a asp-action="Details" asp-route-id="@item.ProjectId">@Resources.Shared.Details </a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.Positions != null)
+{
+    <p>
+        <span style="font-size:18px; font-weight:bold">@Model.SelectedProject.ProjectName @Resources.WebApp.Areas.Users.Projects.Index.Involved</span>
+    </p>
+    <table class="table">
+        <tr>
+            <th>@Resources.WebApp.Areas.Users.Projects.Index.Position</th>
+            <th>@Resources.WebApp.Areas.Users.Projects.Index.Name</th>
+            <th>@Resources.WebApp.Areas.Users.Projects.Index.Email</th>
+            <th>@Resources.WebApp.Areas.Users.Projects.Index.Phone</th>
+
+
+        </tr>
+        @foreach (var item in Model.Positions)
+        {
+            <tr>
+                <td>
+                    @(isEnglish ? item.PositionName.PositionNameEng : item.PositionName.PositionNameEst )
+                </td>
+
+                <td>
+                    @item.ApplicationUser.FullName
+                </td>
+                <td>
+                    @item.ApplicationUser.Email
+                </td>
+                <td>
+                    @item.ApplicationUser.PhoneNumber
+                </td>
+            </tr>
+
+        }
+
+    </table>
+}

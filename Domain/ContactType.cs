@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Domain
@@ -9,10 +10,11 @@ namespace Domain
     {
         public int ContactTypeId { get; set; }
 
-        [MaxLength(100)]
-        public string ContactTypeName { get; set; }
+        public int ContactTypeNameId { get; set; }
 
-        [MaxLength(100)]
-        public string ContactTypeNameEst { get; set; }
+        [ForeignKey(nameof(ContactTypeNameId))]
+        [Display(Name = nameof(Resources.Domain.ContactType.ContactTypeName), ResourceType = typeof(Resources.Domain.ContactType))]
+        public MultiLangString ContactTypeName { get; set; }
+
     }
 }

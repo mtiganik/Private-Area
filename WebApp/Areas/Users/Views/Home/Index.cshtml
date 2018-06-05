@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+<h3> @Resources.WebApp.Areas.Users.Home.Index.Welcome </h3>
+@if (!(User.IsInRole("User") || User.IsInRole("Marketer")))
+{
+    <p>@Resources.WebApp.Areas.Users.Home.Index.AdminWarning</p>
+    <p>@Resources.WebApp.Areas.Users.Home.Index.ContactAdmin</p>
+}
+else
+{
+    <p>@Resources.WebApp.Areas.Users.Home.Index.WelcomeLoggedIn</p>
+
+}
+

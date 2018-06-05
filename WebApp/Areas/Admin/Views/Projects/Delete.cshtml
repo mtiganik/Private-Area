@@ -1,0 +1,51 @@
+﻿@model Domain.Project
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>@Resources.Common.Delete</h2>
+
+<h3>@Resources.Common.AreYouSure</h3>
+<div>
+    <h4>Project</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ProjectName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ProjectName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ProjectNameEst)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ProjectNameEst)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ProjectStartDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ProjectStartDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ProjectEndDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ProjectEndDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ProjectType)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ProjectType.ProjectTypeId)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ProjectId" />
+        <input type="submit" value="@Resources.Common.Delete" class="btn btn-default" /> |
+        <a asp-action="Index">@Resources.Common.BackToList</a>
+    </form>
+</div>

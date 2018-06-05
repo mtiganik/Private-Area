@@ -12,17 +12,50 @@
             <hr />
             <div asp-validation-summary="All" class="text-danger"></div>
             <div class="form-group">
+                <label asp-for="ApplicationUser.FirstName"></label>
+                <input asp-for="ApplicationUser.FirstName" class="form-control" />
+                <span asp-validation-for="ApplicationUser.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApplicationUser.LastName"></label>
+                <input asp-for="ApplicationUser.LastName" class="form-control" />
+                <span asp-validation-for="ApplicationUser.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApplicationUser.Address"></label>
+                <input asp-for="ApplicationUser.Address" class="form-control" />
+                <span asp-validation-for="ApplicationUser.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApplicationUser.Skype"></label>
+                <input asp-for="ApplicationUser.Skype" class="form-control" />
+                <span asp-validation-for="ApplicationUser.Skype" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApplicationUser.Comments"></label>
+                <input asp-for="ApplicationUser.Comments" class="form-control" />
+                <span asp-validation-for="ApplicationUser.Comments" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ApplicationUser.Department" class="control-label"></label>
+                <select asp-for="ApplicationUser.DepartmentId" class="form-control" asp-items="@Model.DepartmentSelectList">
+                    <option>Please select</option>
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label asp-for="Email"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Password"></label>
+                <label asp-for="Password">@Resources.WebApp.Views.Account.Register.Password</label>
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ConfirmPassword"></label>
+                <label asp-for="ConfirmPassword">@Resources.WebApp.Views.Account.Register.ConfirmPassWord</label>
                 <input asp-for="ConfirmPassword" class="form-control" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>

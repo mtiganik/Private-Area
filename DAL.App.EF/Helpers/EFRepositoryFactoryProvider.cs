@@ -41,7 +41,7 @@ namespace DAL.App.EF.Helpers
                 { typeof(IPositionRepository), (dataContext) =>  new PositionRepository(dataContext as ApplicationDbContext)},
                 { typeof(IProjectRepository), (dataContext) =>  new ProjectRepository(dataContext as ApplicationDbContext)},
                 { typeof(IProjectTypeRepository), (dataContext) =>  new ProjectTypeRepository(dataContext as ApplicationDbContext)},
-                { typeof(ISpecialityRepository), (dataContext) =>  new SpecialityRepository(dataContext as ApplicationDbContext)},
+                { typeof(IDepartmentRepository), (dataContext) =>  new DepartmentRepository(dataContext as ApplicationDbContext)},
                 { typeof(IUserStatusRepository), (dataContext) =>  new UserStatusRepository(dataContext as ApplicationDbContext)},
 
                 //{ typeof(IPersonRepository), (dataContext) =>  new PersonRepository(dataContext as ApplicationDbContext)},

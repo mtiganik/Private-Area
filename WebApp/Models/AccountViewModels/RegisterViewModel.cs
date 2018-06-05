@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Domain;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,6 +10,11 @@ namespace WebApp.Models.AccountViewModels
 {
     public class RegisterViewModel
     {
+        public ApplicationUser ApplicationUser { get; set; }
+
+        [Display(Name = "Department")]
+        public SelectList DepartmentSelectList { set; get; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
@@ -25,3 +32,6 @@ namespace WebApp.Models.AccountViewModels
         public string ConfirmPassword { get; set; }
     }
 }
+
+
+

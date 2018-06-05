@@ -1,0 +1,33 @@
+﻿@model Domain.PositionName
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>@Resources.Common.Delete</h2>
+
+<h3>@Resources.Common.AreYouSure</h3>
+<div>
+    <h4>PositionName</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.PositionNameEng)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PositionNameEng)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PositionNameEst)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PositionNameEst)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="PositionNameId" />
+        <input type="submit" value="@Resources.Common.Delete" class="btn btn-default" /> |
+        <a asp-action="Index">@Resources.Common.BackToList</a>
+    </form>
+</div>

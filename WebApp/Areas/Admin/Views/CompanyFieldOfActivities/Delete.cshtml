@@ -1,0 +1,27 @@
+﻿@model Domain.CompanyFieldOfActivity
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>@Resources.Common.Delete</h2>
+
+<h3>@Resources.Common.AreYouSure</h3>
+<div>
+    <h4>CompanyFieldOfActivity</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ActivityName)
+        </dt>
+        <dd>
+            @Html.Raw(Model.ActivityName)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="CompanyFieldOfActivityId" />
+        <input type="submit" value="@Resources.Common.Delete" class="btn btn-default" /> |
+        <a asp-action="Index">@Resources.Common.BackToList</a>
+    </form>
+</div>

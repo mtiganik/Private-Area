@@ -1,0 +1,23 @@
+﻿@using System.Threading
+@using Microsoft.AspNetCore.Builder
+@using Microsoft.Extensions.Options
+@inject IOptions<RequestLocalizationOptions> RequestLocalizationOptions
+@{
+    var cultureItems =
+        RequestLocalizationOptions.Value.SupportedUICultures
+            .Select(c => new { Name = c.Name, Text = c.DisplayName }).ToList();
+    var cultureItemsSelectList =
+        new SelectList(cultureItems, "Name", "Text", Thread.CurrentThread.CurrentUICulture.Name);
+}
+<form id="selectLanguage" method="post" class="form-horizontal" role="form"
+      asp-area="" asp-controller="Home" asp-action="LanguageSelection"
+      asp-route-returnurl="@Context.Request.Path">
+    <div class="row">
+        <div class="col-md-4">UICulture: @Thread.CurrentThread.CurrentUICulture.Name Culture: @Thread.CurrentThread.CurrentCulture.Name</div>
+        <div class="col-md-4">@Resources.WebApp.Views.Shared._LanguageSelectionPartial.ChooseLanguage</div>
+        <div class="col-md-4">
+            <select name="culture" asp-items="@cultureItemsSelectList"
+                    onchange="this.form.submit()" class="form-control"></select>
+        </div>
+    </div>
+</form>

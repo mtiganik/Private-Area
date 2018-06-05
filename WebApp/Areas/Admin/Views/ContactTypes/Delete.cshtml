@@ -1,0 +1,33 @@
+﻿@model Domain.ContactType
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>@Resources.Common.Delete</h2>
+
+<h3>@Resources.Common.AreYouSure</h3>
+<div>
+    <h4>ContactType</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ContactTypeName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ContactTypeName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ContactTypeNameEst)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ContactTypeNameEst)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ContactTypeId" />
+        <input type="submit" value="@Resources.Common.Delete" class="btn btn-default" /> |
+        <a asp-action="Index">@Resources.Common.BackToList</a>
+    </form>
+</div>

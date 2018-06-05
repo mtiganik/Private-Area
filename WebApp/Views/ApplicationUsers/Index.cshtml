@@ -31,46 +31,10 @@
                     @Html.DisplayNameFor(model => model.UserName)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.NormalizedUserName)
-                </th>
-                <th>
                     @Html.DisplayNameFor(model => model.Email)
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.NormalizedEmail)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.EmailConfirmed)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PasswordHash)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.SecurityStamp)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ConcurrencyStamp)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PhoneNumber)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PhoneNumberConfirmed)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.TwoFactorEnabled)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LockoutEnd)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LockoutEnabled)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.AccessFailedCount)
-                </th>
             <th>
-                @Html.DisplayNameFor(model => model.Speciality)
+                @Html.DisplayNameFor(model => model.Department)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.UserStatus)
@@ -100,49 +64,13 @@
                 @Html.DisplayFor(modelItem => item.UserName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.NormalizedUserName)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.NormalizedEmail)
+                @Html.DisplayFor(modelItem => item.Department.DepartmentName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EmailConfirmed)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PasswordHash)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SecurityStamp)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ConcurrencyStamp)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhoneNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhoneNumberConfirmed)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TwoFactorEnabled)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LockoutEnd)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LockoutEnabled)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AccessFailedCount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Speciality.SpecialityId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserStatus.UserStatusId)
+                @Html.DisplayFor(modelItem => item.UserStatus.UserStatusName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -1,0 +1,192 @@
+﻿@model WebApp.Areas.Users.Models.UsersIndexData
+@inject UserManager<Domain.ApplicationUser> UserManager
+@using Microsoft.AspNetCore.Identity
+@using System.Threading
+
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@{bool isEnglish;
+    if (Thread.CurrentThread.CurrentUICulture.Name.ToString() == "en-GB")
+    {
+        isEnglish = true;
+    }
+    else { isEnglish = false; } }
+<h2>@Resources.WebApp.Areas.Users.Users.Index.Title</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUsers.FirstOrDefault().FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUsers.FirstOrDefault().LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUsers.FirstOrDefault().Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUsers.FirstOrDefault().Skype)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUsers.FirstOrDefault().Comments)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUsers.FirstOrDefault().Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUsers.FirstOrDefault().Department)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUsers.FirstOrDefault().UserStatus)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ApplicationUsers)
+        {
+            string UserRow = "";
+            bool showEdit = false;
+            string selectedRow = "";
+            if (item.UserName == UserManager.GetUserName(User))
+            {
+                UserRow = "bg-info";
+                showEdit = true;
+            }
+            if (item.UserName.Equals(ViewData["UserName"]))
+            {
+                selectedRow = "success";
+
+            }
+            <tr class="@UserRow @selectedRow">
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Skype)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comments)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                @if (isEnglish)
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Department.DepartmentName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserStatus.UserStatusName)
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Department.DepartmentNameEst)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserStatus.UserStatusNameEst)
+                    </td>
+                }
+
+                <td>
+                    @if (showEdit)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id"> @Resources.Shared.Edit</a>
+                    }
+                    <a asp-action="Index" asp-route-user="@item.UserName">@Resources.WebApp.Areas.Users.Users.Index.Select</a>
+
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+</table>
+<hr />
+<hr />
+
+@if (Model.Positions != null)
+{
+    <p>
+        <span style="font-size:18px; font-weight:bold">@Model.SelectedApplicationUser.FullName @Resources.WebApp.Areas.Users.Users.Index.UserText</span>
+    </p>
+
+    <table class="table">
+        <tr>
+            <th>@Resources.WebApp.Areas.Users.Users.Index.ProjectName</th>
+            <th>@Resources.WebApp.Areas.Users.Users.Index.StartDate</th>
+            <th>@Resources.WebApp.Areas.Users.Users.Index.Description</th>
+            <th>@Resources.WebApp.Areas.Users.Users.Index.Member</th>
+            <th>@Resources.WebApp.Areas.Users.Users.Index.Position</th>
+
+
+        </tr>
+        @foreach (var item in Model.Positions)
+        {
+            if (isEnglish)
+            {
+                <tr>
+                    <td>
+                        @item.Project.ProjectName
+
+                    </td>
+                    <td>
+                        @item.Project.ProjectStartDate.ToShortDateString()
+
+                    </td>
+                    <td>
+                        @item.Project.ProjectType.ProjectTypeComments
+                    </td>
+                    <td>
+                        @item.ApplicationUser.FullName
+                    </td>
+
+                    <td>
+                        @item.PositionName.PositionNameEng
+                    </td>
+
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td>
+                        @item.Project.ProjectNameEst
+
+                    </td>
+                    <td>
+                        @item.Project.ProjectStartDate.ToShortDateString()
+
+                    </td>
+                    <td>
+                        @item.Project.ProjectType.ProjectTypeCommentsEst
+                    </td>
+                    <td>
+                        @item.ApplicationUser.FullName
+                    </td>
+
+                    <td>
+                        @item.PositionName.PositionNameEst
+                    </td>
+
+                </tr>
+
+
+            }
+        }
+
+    </table>
+
+}

@@ -15,6 +15,7 @@ namespace DAL.App.EF
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<CompanyFieldOfActivity> CompanyFieldOfActivities { get; set; }
+        public DbSet<CompanyProject> CompanyProjects { get; set; }
         public DbSet<CompanyType> CompanyTypes { get; set; }
         public DbSet<CompanyWorker> CompanyWorkers { get; set; }
         public DbSet<CompanyWorkerPosition> CompanyWorkerPositions { get; set; }
@@ -24,8 +25,10 @@ namespace DAL.App.EF
         public DbSet<PositionName> PositionNames { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<ProjectType> ProjectTypes { get; set; }
-        public DbSet<Speciality> Specialities { get; set; }
+        public DbSet<Department> Departments { get; set; }
         public DbSet<UserStatus> UserStatuses { get; set; }
+        public DbSet<MultiLangString> MultiLangStrings { get; set; }
+        public DbSet<Translation> Translations { get; set; }
 
 
 

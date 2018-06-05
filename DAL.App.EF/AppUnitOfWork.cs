@@ -79,8 +79,8 @@ namespace DAL.App.EF
             GetEntityRepository<ProjectType>();
 
 
-        public IRepository<Speciality> Specialities =>
-            GetEntityRepository<Speciality>();
+        public IRepository<Department> Departments =>
+            GetEntityRepository<Department>();
 
 
         public IRepository<UserStatus> UserStatuses =>

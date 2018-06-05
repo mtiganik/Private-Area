@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
+    [Authorize]
     public class ApplicationUsersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,7 +24,7 @@ namespace WebApp.Controllers
         // GET: ApplicationUsers
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.ApplicationUser.Include(a => a.Speciality).Include(a => a.UserStatus);
+            var applicationDbContext = _context.ApplicationUser.Include(a => a.Department).Include(a => a.UserStatus);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -35,7 +37,7 @@ namespace WebApp.Controllers
             }
 
             var applicationUser = await _context.ApplicationUser
-                .Include(a => a.Speciality)
+                .Include(a => a.Department)
                 .Include(a => a.UserStatus)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (applicationUser == null)
@@ -49,7 +51,7 @@ namespace WebApp.Controllers
         // GET: ApplicationUsers/Create
         public IActionResult Create()
         {
-            ViewData["SpecialityId"] = new SelectList(_context.Specialities, "SpecialityId", "SpecialityId");
+            ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentId");
             ViewData["UserStatusId"] = new SelectList(_context.UserStatuses, "UserStatusId", "UserStatusId");
             return View();
         }
@@ -59,7 +61,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FirstName,LastName,Address,Skype,Comments,UserStatusId,SpecialityId,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] ApplicationUser applicationUser)
+        public async Task<IActionResult> Create([Bind("FirstName,LastName,Address,Skype,Comments,UserStatusId,DepartmentId,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] ApplicationUser applicationUser)
         {
             if (ModelState.IsValid)
             {
@@ -67,7 +69,7 @@ namespace WebApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SpecialityId"] = new SelectList(_context.Specialities, "SpecialityId", "SpecialityId", applicationUser.SpecialityId);
+            ViewData["DepartmentId"] = new SelectList(_context.Departments, "SpecialityId", "SpecialityId", applicationUser.DepartmentId);
             ViewData["UserStatusId"] = new SelectList(_context.UserStatuses, "UserStatusId", "UserStatusId", applicationUser.UserStatusId);
             return View(applicationUser);
         }
@@ -85,7 +87,7 @@ namespace WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["SpecialityId"] = new SelectList(_context.Specialities, "SpecialityId", "SpecialityId", applicationUser.SpecialityId);
+            ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentId", applicationUser.DepartmentId);
             ViewData["UserStatusId"] = new SelectList(_context.UserStatuses, "UserStatusId", "UserStatusId", applicationUser.UserStatusId);
             return View(applicationUser);
         }
@@ -95,7 +97,7 @@ namespace WebApp.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("FirstName,LastName,Address,Skype,Comments,UserStatusId,SpecialityId,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] ApplicationUser applicationUser)
+        public async Task<IActionResult> Edit(string id, [Bind("FirstName,LastName,Address,Skype,Comments,UserStatusId,DepartmentId,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] ApplicationUser applicationUser)
         {
             if (id != applicationUser.Id)
             {
@@ -122,7 +124,7 @@ namespace WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SpecialityId"] = new SelectList(_context.Specialities, "SpecialityId", "SpecialityId", applicationUser.SpecialityId);
+            ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentId", applicationUser.DepartmentId);
             ViewData["UserStatusId"] = new SelectList(_context.UserStatuses, "UserStatusId", "UserStatusId", applicationUser.UserStatusId);
             return View(applicationUser);
         }
@@ -136,7 +138,7 @@ namespace WebApp.Controllers
             }
 
             var applicationUser = await _context.ApplicationUser
-                .Include(a => a.Speciality)
+                .Include(a => a.Department)
                 .Include(a => a.UserStatus)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (applicationUser == null)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using DAL.App.EF;
 using Domain;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -25,18 +26,24 @@ namespace WebApp.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger _logger;
+        private readonly ApplicationDbContext _context;
+
+
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _context = context;
         }
+
 
         [TempData]
         public string ErrorMessage { get; set; }
@@ -209,8 +216,10 @@ namespace WebApp.Controllers
         [AllowAnonymous]
         public IActionResult Register(string returnUrl = null)
         {
+            var vm = new RegisterViewModel();
+           vm.DepartmentSelectList = new SelectList(_context.Departments.OrderByDescending(a => a.DepartmentName), "DepartmentId", "DepartmentName");
             ViewData["ReturnUrl"] = returnUrl;
-            return View();
+            return View(vm);
         }
 
         [HttpPost]
@@ -221,7 +230,17 @@ namespace WebApp.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    FirstName = model.ApplicationUser.FirstName,
+                    LastName = model.ApplicationUser.LastName,
+                    Department = _context.Departments.Where(d => d.DepartmentId == model.ApplicationUser.DepartmentId).Single(),
+                    Skype = model.ApplicationUser.Skype,
+                    Comments = model.ApplicationUser.Comments,
+                    Address = model.ApplicationUser.Address,
+                    UserStatus = _context.UserStatuses.Where(u => u.UserStatusName == "New member").Single(),
+                };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

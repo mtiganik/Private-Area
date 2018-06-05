@@ -1,0 +1,108 @@
+﻿@model WebApp.Areas.Admin.Models.ProjectsIndexData
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>@Resources.Common.Index</h2>
+
+<p>
+    <a asp-action="Create">@Resources.Common.CreateNew</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Projects.SingleOrDefault().ProjectName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Projects.SingleOrDefault().ProjectNameEst)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Projects.SingleOrDefault().ProjectStartDate)
+
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Projects.SingleOrDefault().ProjectEndDate)
+
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Projects.SingleOrDefault().ProjectType)
+
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Projects)
+        {
+            string selectedRow = "";
+            if (item.ProjectId == (int?)ViewData["ProjectId"])
+            {
+                selectedRow = "success";
+
+            }
+
+        <tr class="@selectedRow">
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectNameEst)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectStartDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectEndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectType.ProjectTypeName)
+            </td>
+            <td>
+                <a asp-action="Index" asp-route-id="@item.ProjectId">@Resources.Common.Select</a> |
+                <a asp-action="Edit" asp-route-id="@item.ProjectId">@Resources.Common.Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ProjectId">@Resources.Common.Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ProjectId">@Resources.Common.Delete</a>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.Positions != null)
+{
+<p>
+    <span style="font-size:18px; font-weight:bold">Members in @Model.SelectedProject.ProjectName </span>|
+    <a asp-controller="Positions" asp-action="Create" asp-route-projectId="@Model.SelectedProject.ProjectId">Add new member</a>
+</p>
+
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+        </tr>
+        @foreach (var item in Model.Positions)
+        {
+            <tr>
+                <td>
+                    @item.ApplicationUser.FullName
+
+                </td>
+                <td>
+                    @item.PositionName.PositionNameEng
+                </td>
+                <td>
+                    <a asp-controller="Positions" asp-action="Edit" asp-route-id="@item.PositionId">Edit</a> |
+                    <a asp-controller="Positions" asp-action="Details" asp-route-id="@item.PositionId">Details</a> |
+                    <a asp-controller="Positions" asp-action="Delete" asp-route-id="@item.PositionId">Remove</a>
+                </td>
+            </tr>
+
+        }
+
+    </table>
+
+}

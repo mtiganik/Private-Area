@@ -1,0 +1,139 @@
+﻿@model WebApp.Areas.Users.Models.ProjectDetailsViewModel
+@using System.Threading
+@inject UserManager<Domain.ApplicationUser> UserManager
+
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+@{bool isEnglish;
+    if (Thread.CurrentThread.CurrentUICulture.Name.ToString() == "en-GB")
+    {
+        isEnglish = true;
+    }
+    else { isEnglish = false; } }
+
+
+<div>
+    <h4>Project</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Resources.WebApp.Areas.Users.Projects.Details.ProjectNameEnglish
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SelectedProject.ProjectName)
+        </dd>
+        <dt>
+            @Resources.WebApp.Areas.Users.Projects.Details.ProjectNameEst
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SelectedProject.ProjectNameEst)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SelectedProject.ProjectStartDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SelectedProject.ProjectStartDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SelectedProject.ProjectEndDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.SelectedProject.ProjectEndDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SelectedProject.ProjectType)
+        </dt>
+        <dd>
+            @( isEnglish ? Html.DisplayFor(model => model.SelectedProject.ProjectType.ProjectTypeName) : Html.DisplayFor(model => model.SelectedProject.ProjectType.ProjectTypeNameEst))
+        </dd>
+    </dl>
+</div>
+
+@if (Model.SelectedProject.Positions.Any())
+{
+    <div>
+        <div class="dl-horizontal">
+            <h2>@Resources.WebApp.Areas.Users.Projects.Details.MembersInProject:</h2>
+
+            @foreach (var item in Model.SelectedProject.Positions)
+            {
+                <dt> @(isEnglish ? item.PositionName.PositionNameEng : item.PositionName.PositionNameEst) </dt>
+                <dd> @item.ApplicationUser.FullName</dd>
+
+            }
+        </div>
+    </div>
+}
+
+@if (Model.SelectedProject.CompanyProjects.Any() && User.IsInRole("Marketer"))
+{
+    <table>
+        <thread>
+
+        </thread>
+        <h2>@Resources.WebApp.Areas.Users.Projects.Details.ConnectedCompanies</h2>
+            <ul>
+                @foreach (var item in Model.SelectedProject.CompanyProjects)
+                {
+                    <li><a asp-action="Details" asp-controller="Companies" asp-route-id="@item.Company.CompanyId"> @item.Company.CompanyName </a></li>
+
+                }
+            </ul>
+
+    </table>
+
+}
+else
+{
+    <h3>@Resources.WebApp.Areas.Users.Projects.Details.NoConnectedCompanies</h3>
+
+}
+    <button id="AddCompanyButton">@Resources.WebApp.Areas.Users.Projects.Details.AddCompany</button>
+<div id="NewCompany" hidden="hidden">
+    <div class="row">
+        <div class="col-md-4">
+            <form method="post"  asp-action="CreateCompanyProject" asp-route-id="@Model.SelectedProject.ProjectId" >
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="form-group">
+                    <label asp-for="SelectedProject.CompanyProjects.FirstOrDefault().Company.CompanyName" class="control-label"></label>
+                    <select asp-for="SelectedProject.CompanyProjects.FirstOrDefault().CompanyId" class="form-control" asp-items="Model.CompaniesSelectList"></select>
+                </div>
+                <p>@Resources.WebApp.Areas.Users.Projects.Details.DidntFind <a asp-action="Create" asp-controller="Companies" asp-route-fromProject="@Model.SelectedProject.ProjectId">@Resources.WebApp.Areas.Users.Projects.Details.AddNewCompany</a></p>
+
+                <div class="form-group">
+                    <input type="submit" value="@Resources.WebApp.Areas.Users.Projects.Details.Add" class="btn btn-default" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+ 
+<div>
+    @*<a asp-action="Edit" asp-route-id="@Model.ProjectId">Edit</a> |*@
+    <a asp-action="Index">@Resources.WebApp.Areas.Users.Projects.Details.BackToList</a>
+</div>
+
+@section Scripts{
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+
+    $(document).ready(
+        function () {
+            $("#AddCompanyButton").click(function () {
+                $("#NewCompany").show();
+
+            })
+
+        }
+    );
+</script>
+    }
