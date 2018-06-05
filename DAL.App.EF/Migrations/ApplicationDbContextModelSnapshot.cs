@@ -73,6 +73,7 @@ namespace DAL.App.EF.Migrations
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasMaxLength(256);
 
                     b.Property<int>("UserStatusId");
@@ -126,11 +127,13 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("CompanyFieldOfActivityId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("ActivityNameId");
+                    b.Property<string>("ActivityName")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("ActivityNameEst")
+                        .HasMaxLength(100);
 
                     b.HasKey("CompanyFieldOfActivityId");
-
-                    b.HasIndex("ActivityNameId");
 
                     b.ToTable("CompanyFieldOfActivities");
                 });
@@ -158,11 +161,13 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("CompanyTypeId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("CompanyTypeNameId");
+                    b.Property<string>("CompanyTypeName")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("CompanyTypeNameEst")
+                        .HasMaxLength(100);
 
                     b.HasKey("CompanyTypeId");
-
-                    b.HasIndex("CompanyTypeNameId");
 
                     b.ToTable("CompanyTypes");
                 });
@@ -258,11 +263,13 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("ContactTypeId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("ContactTypeNameId");
+                    b.Property<string>("ContactTypeName")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("ContactTypeNameEst")
+                        .HasMaxLength(100);
 
                     b.HasKey("ContactTypeId");
-
-                    b.HasIndex("ContactTypeNameId");
 
                     b.ToTable("ContactTypes");
                 });
@@ -281,19 +288,6 @@ namespace DAL.App.EF.Migrations
                     b.HasKey("DepartmentId");
 
                     b.ToTable("Departments");
-                });
-
-            modelBuilder.Entity("Domain.MultiLangString", b =>
-                {
-                    b.Property<int>("MultiLangStringId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Value")
-                        .HasMaxLength(4096);
-
-                    b.HasKey("MultiLangStringId");
-
-                    b.ToTable("MultiLangStrings");
                 });
 
             modelBuilder.Entity("Domain.Position", b =>
@@ -380,26 +374,6 @@ namespace DAL.App.EF.Migrations
                     b.HasKey("ProjectTypeId");
 
                     b.ToTable("ProjectTypes");
-                });
-
-            modelBuilder.Entity("Domain.Translation", b =>
-                {
-                    b.Property<int>("TranslationId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Culture")
-                        .HasMaxLength(12);
-
-                    b.Property<int>("MultiLangStringId");
-
-                    b.Property<string>("Value")
-                        .HasMaxLength(4096);
-
-                    b.HasKey("TranslationId");
-
-                    b.HasIndex("MultiLangStringId");
-
-                    b.ToTable("Translations");
                 });
 
             modelBuilder.Entity("Domain.UserStatus", b =>
@@ -552,14 +526,6 @@ namespace DAL.App.EF.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Domain.CompanyFieldOfActivity", b =>
-                {
-                    b.HasOne("Domain.MultiLangString", "ActivityName")
-                        .WithMany()
-                        .HasForeignKey("ActivityNameId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Domain.CompanyProject", b =>
                 {
                     b.HasOne("Domain.Company", "Company")
@@ -571,13 +537,6 @@ namespace DAL.App.EF.Migrations
                         .WithMany("CompanyProjects")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Domain.CompanyType", b =>
-                {
-                    b.HasOne("Domain.MultiLangString", "CompanyTypeName")
-                        .WithMany()
-                        .HasForeignKey("CompanyTypeNameId");
                 });
 
             modelBuilder.Entity("Domain.CompanyWorker", b =>
@@ -619,14 +578,6 @@ namespace DAL.App.EF.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Domain.ContactType", b =>
-                {
-                    b.HasOne("Domain.MultiLangString", "ContactTypeName")
-                        .WithMany()
-                        .HasForeignKey("ContactTypeNameId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Domain.Position", b =>
                 {
                     b.HasOne("Domain.ApplicationUser", "ApplicationUser")
@@ -649,14 +600,6 @@ namespace DAL.App.EF.Migrations
                     b.HasOne("Domain.ProjectType", "ProjectType")
                         .WithMany()
                         .HasForeignKey("ProjectTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Domain.Translation", b =>
-                {
-                    b.HasOne("Domain.MultiLangString", "MultiLangString")
-                        .WithMany("Translations")
-                        .HasForeignKey("MultiLangStringId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

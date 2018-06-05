@@ -1,4 +1,5 @@
-﻿@model WebApp.Areas.Admin.Models.CompanyTypeCreateEditVM
+﻿@model Domain.CompanyType
+
 @{
     ViewData["Title"] = "Create";
 }
@@ -11,9 +12,16 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-            @Html.Partial("_CreateEdit", Model)
-
+            <div class="form-group">
+                <label asp-for="CompanyTypeName" class="control-label"></label>
+                <input asp-for="CompanyTypeName" class="form-control" />
+                <span asp-validation-for="CompanyTypeName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompanyTypeNameEst" class="control-label"></label>
+                <input asp-for="CompanyTypeNameEst" class="form-control" />
+                <span asp-validation-for="CompanyTypeNameEst" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <input type="submit" value="@Resources.Common.Create" class="btn btn-default" />
             </div>

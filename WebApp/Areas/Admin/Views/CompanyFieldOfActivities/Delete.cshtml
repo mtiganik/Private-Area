@@ -15,7 +15,13 @@
             @Html.DisplayNameFor(model => model.ActivityName)
         </dt>
         <dd>
-            @Html.Raw(Model.ActivityName)
+            @Html.DisplayFor(model => model.ActivityName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ActivityNameEst)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ActivityNameEst)
         </dd>
     </dl>
     
