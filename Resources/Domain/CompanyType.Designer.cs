@@ -61,20 +61,11 @@ namespace Resources.Domain {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Company type name in English.
+        ///   Looks up a localized string similar to Company Type.
         /// </summary>
         public static string CompanyTypeName {
             get {
                 return ResourceManager.GetString("CompanyTypeName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Company type name in Estonian.
-        /// </summary>
-        public static string CompanyTypeNameEst {
-            get {
-                return ResourceManager.GetString("CompanyTypeNameEst", resourceCulture);
             }
         }
     }

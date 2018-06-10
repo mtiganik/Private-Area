@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Domain
@@ -9,13 +10,11 @@ namespace Domain
     {
         public int CompanyWorkerPositionId { get; set; }
 
-        [MaxLength(100)]
+        public int PositionNameId { get; set; }
+        [ForeignKey(nameof(PositionNameId))]
         [Display(Name = nameof(Resources.Domain.CompanyWorkerPosition.PositionName), ResourceType = typeof(Resources.Domain.CompanyWorkerPosition))]
-        public string PositionName { get; set; }
+        public MultiLangString PositionName { get; set; }
 
-        [MaxLength(100)]
-        [Display(Name = nameof(Resources.Domain.CompanyWorkerPosition.PositionNameEst), ResourceType = typeof(Resources.Domain.CompanyWorkerPosition))]
-        public string PositionNameEst { get; set; }
 
         public virtual List<CompanyWorker> CompanyWorkers { get; set; }
     }

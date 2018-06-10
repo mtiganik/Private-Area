@@ -118,15 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ProjectComments" xml:space="preserve">
-    <value>Inglisekeelne kirjeldus</value>
-  </data>
-  <data name="ProjectCommentsEst" xml:space="preserve">
-    <value>Eestikeelne kirjeldus</value>
+    <value>Projekti kirjeldus</value>
   </data>
   <data name="ProjectTypeName" xml:space="preserve">
-    <value>Projekti tüübi nimi inglise keeles</value>
-  </data>
-  <data name="ProjectTypeNameEst" xml:space="preserve">
-    <value>Projekti tüübi nimi eesti keeles</value>
+    <value>Projektitüübi nimi</value>
   </data>
 </root>

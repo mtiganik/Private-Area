@@ -4,7 +4,7 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<h2>@Resources.Common.Details</h2>
 
 <div>
     <h4>UserStatus</h4>
@@ -14,17 +14,11 @@
             @Html.DisplayNameFor(model => model.UserStatusName)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.UserStatusName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.UserStatusNameEst)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.UserStatusNameEst)
+            @Html.Raw(Model.UserStatusName)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.UserStatusId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.UserStatusId">@Resources.Common.Edit</a> |
+    <a asp-action="Index">@Resources.Common.BackToList</a>
 </div>

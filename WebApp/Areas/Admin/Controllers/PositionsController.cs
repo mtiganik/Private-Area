@@ -54,18 +54,20 @@ namespace WebApp.Area.Admin.Controllers
         public IActionResult Create(int? projectId)
         {
             var vm = new PositionCreateEditViewModel();
-            vm.PositionNameSelectList = new SelectList(_context.PositionNames, "PositionNameId", "PositionNameEng");
-            if(projectId != null)
+            //vm.PositionNameSelectList = new SelectList(_context.PositionNames, nameof(PositionName.PositionNameId), nameof(PositionName.PositionNameName));
+            vm.PositionNameSelectList = new SelectList(_context.PositionNames.Include(t => t.PositionNameName).ThenInclude(t => t.Translations), nameof(PositionName.PositionNameId), nameof(PositionName.PositionNameName));
+
+            if (projectId != null)
             {
-                vm.ProjectsSelectList = new SelectList(_context.Projects.Where(u => u.ProjectId == projectId), "ProjectId", "ProjectName");
-                vm.ApplicationUserSelectList = new SelectList(_context.ApplicationUser, "Id", "FullName");
+                vm.ProjectsSelectList = new SelectList(_context.Projects.Where(u => u.ProjectId == projectId), nameof(Project.ProjectId), nameof(Project.ProjectName));
             }
             else
             {
-                vm.ProjectsSelectList = new SelectList(_context.Projects, "ProjectId", "ProjectName");
-                vm.ApplicationUserSelectList = new SelectList(_context.ApplicationUser, "Id", "FullName");
+                vm.ProjectsSelectList = new SelectList(_context.Projects, nameof(Project.ProjectId), nameof(Project.ProjectName));
 
             }
+            vm.ApplicationUserSelectList = new SelectList(_context.ApplicationUser, nameof(ApplicationUser.Id), nameof(ApplicationUser.FullName));
+
 
             return View(vm);
         }
@@ -101,7 +103,7 @@ namespace WebApp.Area.Admin.Controllers
             {
                 return NotFound();
             }
-            vm.PositionNameSelectList = new SelectList(_context.PositionNames, "PositionNameId", "PositionNameEng", vm.Position.PositionNameId);
+            vm.PositionNameSelectList = new SelectList(_context.PositionNames.Include(t => t.PositionNameName).ThenInclude(t => t.Translations), nameof(PositionName.PositionNameId), nameof(PositionName.PositionNameName));
             vm.ProjectsSelectList = new SelectList(_context.Projects, "ProjectId", "ProjectName", vm.Position.ProjectId);
             vm.ApplicationUserSelectList = new SelectList(_context.ApplicationUser, "Id", "FullName", vm.Position.ApplicationUserId);
             return View(vm);
@@ -137,7 +139,7 @@ namespace WebApp.Area.Admin.Controllers
                 }
                 return RedirectToAction("Index", "Projects", new { id = vm.Position.ProjectId });
             }
-            vm.PositionNameSelectList = new SelectList(_context.PositionNames, "PositionNameId", "PositionNameEng", vm.Position.PositionNameId);
+            vm.PositionNameSelectList = new SelectList(_context.PositionNames.Include(t => t.PositionNameName).ThenInclude(t => t.Translations), nameof(PositionName.PositionNameId), nameof(PositionName.PositionNameName));
             vm.ProjectsSelectList = new SelectList(_context.Projects, "ProjectId", "ProjectName", vm.Position.ProjectId);
             vm.ApplicationUserSelectList = new SelectList(_context.ApplicationUser, "Id", "FullName", vm.Position.ApplicationUserId);
 

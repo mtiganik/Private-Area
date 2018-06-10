@@ -14,13 +14,7 @@
             @Html.DisplayNameFor(model => model.ContactTypeName)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ContactTypeName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ContactTypeNameEst)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ContactTypeNameEst)
+            @Html.Raw(Model.ContactTypeName)
         </dd>
     </dl>
 </div>

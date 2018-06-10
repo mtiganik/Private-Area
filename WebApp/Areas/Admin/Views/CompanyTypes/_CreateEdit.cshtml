@@ -1,5 +1,8 @@
 ﻿@model WebApp.Areas.Admin.Models.CompanyTypeCreateEditVM
 
+<input type="hidden" asp-for="CompanyType.CompanyTypeName" />
+
+
 <div class="form-group">
     <label asp-for="CompanyTypeName" class="control-label"></label>
     <input asp-for="CompanyTypeName" class="form-control" />

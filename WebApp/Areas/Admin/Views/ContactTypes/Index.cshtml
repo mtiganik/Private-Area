@@ -15,9 +15,6 @@
                 <th>
                     @Html.DisplayNameFor(model => model.ContactTypeName)
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ContactTypeNameEst)
-                </th>
             <th></th>
         </tr>
     </thead>
@@ -25,10 +22,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.ContactTypeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContactTypeNameEst)
+                @Html.Raw(item.ContactTypeName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ContactTypeId">@Resources.Common.Edit</a> |

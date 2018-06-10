@@ -61,20 +61,11 @@ namespace Resources.Domain {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to User status English.
+        ///   Looks up a localized string similar to User status.
         /// </summary>
         public static string UserStatusName {
             get {
                 return ResourceManager.GetString("UserStatusName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to User status Estonian.
-        /// </summary>
-        public static string UserStatusNameEst {
-            get {
-                return ResourceManager.GetString("UserStatusNameEst", resourceCulture);
             }
         }
     }

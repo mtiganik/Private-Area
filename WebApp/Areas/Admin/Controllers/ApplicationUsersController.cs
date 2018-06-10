@@ -81,7 +81,13 @@ namespace WebApp.Areas.Admin.Controllers
 
 
 
-            var applicationDbContext = _context.ApplicationUser.Include(a => a.Department).Include(a => a.UserStatus);
+            var applicationDbContext = _context.ApplicationUser
+                .Include(a => a.Department)
+                    .ThenInclude(t => t.DepartmentName)
+                        .ThenInclude(t => t.Translations)
+                .Include(a => a.UserStatus)
+                    .ThenInclude(T => T.UserStatusName)
+                        .ThenInclude(t => t.Translations);
             return View(await applicationDbContext.ToListAsync());
         }
 

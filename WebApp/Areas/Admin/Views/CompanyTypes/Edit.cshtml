@@ -1,0 +1,31 @@
+﻿@model WebApp.Areas.Admin.Models.CompanyTypeCreateEditVM
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>@Resources.Common.Edit</h2>
+
+<h4>CompanyType</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CompanyType.CompanyTypeId" />
+            <input type="hidden" asp-for="CompanyType.CompanyTypeNameId" />
+
+
+
+            @Html.Partial("_CreateEdit")
+            <div class="form-group">
+                <input type="submit" value="@Resources.Common.Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">@Resources.Common.BackToList</a>
+</div>
+

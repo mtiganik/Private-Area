@@ -1,0 +1,21 @@
+﻿@model WebApp.Areas.Admin.Models.ProjectsCreateEditVM
+
+<div class="form-group">
+    <label asp-for="Project.ProjectName" class="control-label"></label>
+    <input asp-for="Project.ProjectName" class="form-control" />
+    <span asp-validation-for="Project.ProjectName" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Project.ProjectStartDate" class="control-label"></label>
+    <input asp-for="Project.ProjectStartDate" class="form-control" id="ProjectStartDate" />
+    <span asp-validation-for="Project.ProjectStartDate" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Project.ProjectEndDate" class="control-label"></label>
+    <input asp-for="Project.ProjectEndDate" class="form-control" />
+    <span asp-validation-for="Project.ProjectEndDate" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="Project.ProjectType" class="control-label"></label>
+    <select asp-for="Project.ProjectTypeId" class="form-control" asp-items="Model.ProjectTypeSelectList"></select>
+</div>

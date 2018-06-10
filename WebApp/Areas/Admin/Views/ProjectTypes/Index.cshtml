@@ -16,13 +16,7 @@
                     @Html.DisplayNameFor(model => model.ProjectTypeName)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.ProjectTypeNameEst)
-                </th>
-                <th>
                     @Html.DisplayNameFor(model => model.ProjectTypeComments)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ProjectTypeCommentsEst)
                 </th>
             <th></th>
         </tr>
@@ -34,13 +28,7 @@
                 @Html.DisplayFor(modelItem => item.ProjectTypeName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ProjectTypeNameEst)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectTypeComments)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectTypeCommentsEst)
+                @Html.Raw(item.ProjectTypeComments)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ProjectTypeId">@Resources.Common.Edit</a> |

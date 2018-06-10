@@ -61,20 +61,11 @@ namespace Resources.Domain {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Contact type name English.
+        ///   Looks up a localized string similar to Contact type.
         /// </summary>
         public static string ContactTypeName {
             get {
                 return ResourceManager.GetString("ContactTypeName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Contact type name Estonian.
-        /// </summary>
-        public static string ContactTypeNameEst {
-            get {
-                return ResourceManager.GetString("ContactTypeNameEst", resourceCulture);
             }
         }
     }

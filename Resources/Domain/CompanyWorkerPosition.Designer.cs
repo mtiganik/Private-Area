@@ -61,20 +61,11 @@ namespace Resources.Domain {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Position name in English.
+        ///   Looks up a localized string similar to Position name .
         /// </summary>
         public static string PositionName {
             get {
                 return ResourceManager.GetString("PositionName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Position name in Estonian.
-        /// </summary>
-        public static string PositionNameEst {
-            get {
-                return ResourceManager.GetString("PositionNameEst", resourceCulture);
             }
         }
     }

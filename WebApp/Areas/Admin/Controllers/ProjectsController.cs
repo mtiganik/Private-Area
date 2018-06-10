@@ -43,10 +43,12 @@ namespace WebApp.Area.Admin.Controllers
 
             if (id != null)
             {
-                ViewData["ProjectId"] = id.Value;
+                vm.ProjectId = id.Value;
                 vm.Positions = _context.Positions.Where(i => i.ProjectId == id.Value)
                     .Include(i => i.ApplicationUser)
                     .Include(i => i.PositionName)
+                        .ThenInclude(t => t.PositionNameName)
+                            .ThenInclude(t => t.Translations)
                     .Include(i => i.Project);
                 vm.SelectedProject = _context.Projects.Where(i => i.ProjectId == id.Value).SingleOrDefault();
 
@@ -77,25 +79,24 @@ namespace WebApp.Area.Admin.Controllers
         // GET: Projects/Create
         public IActionResult Create()
         {
-            ViewData["ProjectTypeId"] = new SelectList(_context.ProjectTypes, "ProjectTypeId", "ProjectTypeName");
-            return View();
+            var vm = new ProjectsCreateEditVM();
+            vm.ProjectTypeSelectList = new SelectList(_context.ProjectTypes, nameof(ProjectType.ProjectTypeId), nameof(ProjectType.ProjectTypeName));
+            return View(vm);
         }
 
         // POST: Projects/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectId,ProjectName,ProjectNameEst,ProjectStartDate,ProjectEndDate,ProjectTypeId")] Project project)
+        public async Task<IActionResult> Create(ProjectsCreateEditVM vm)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(project);
+                _context.Add(vm.Project);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProjectTypeId"] = new SelectList(_context.ProjectTypes, "ProjectTypeId", "ProjectTypeId", project.ProjectTypeId);
-            return View(project);
+            vm.ProjectTypeSelectList = new SelectList(_context.ProjectTypes, nameof(ProjectType.ProjectTypeId), nameof(ProjectType.ProjectTypeName), vm.Project.ProjectTypeId);
+            return View(vm);
         }
 
         // GET: Projects/Edit/5
@@ -111,18 +112,18 @@ namespace WebApp.Area.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["ProjectTypeId"] = new SelectList(_context.ProjectTypes, "ProjectTypeId", "ProjectTypeName", project.ProjectTypeId);
-            return View(project);
+            var vm = new ProjectsCreateEditVM();
+            vm.Project = project;
+            vm.ProjectTypeSelectList = new SelectList(_context.ProjectTypes, nameof(ProjectType.ProjectTypeId), nameof(ProjectType.ProjectTypeName), project.ProjectTypeId);
+            return View(vm);
         }
 
         // POST: Projects/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProjectId,ProjectName,ProjectNameEst,ProjectStartDate,ProjectEndDate,ProjectTypeId")] Project project)
+        public async Task<IActionResult> Edit(int id, ProjectsCreateEditVM vm)
         {
-            if (id != project.ProjectId)
+            if (id != vm.Project.ProjectId)
             {
                 return NotFound();
             }
@@ -131,12 +132,12 @@ namespace WebApp.Area.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(project);
+                    _context.Update(vm.Project);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProjectExists(project.ProjectId))
+                    if (!ProjectExists(vm.Project.ProjectId))
                     {
                         return NotFound();
                     }
@@ -147,8 +148,8 @@ namespace WebApp.Area.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProjectTypeId"] = new SelectList(_context.ProjectTypes, "ProjectTypeId", "ProjectTypeName", project.ProjectTypeId);
-            return View(project);
+            vm.ProjectTypeSelectList = new SelectList(_context.ProjectTypes, nameof(Project.ProjectTypeId), nameof(Project.ProjectName), vm.Project.ProjectTypeId);
+            return View(vm);
         }
 
         // GET: Projects/Delete/5

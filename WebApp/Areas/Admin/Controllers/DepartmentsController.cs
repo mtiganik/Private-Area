@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using WebApp.Areas.Admin.Models;
 
 namespace WebApp.Areas.Admin.Controllers
 {
@@ -23,7 +24,9 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: Admin/Departments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Departments.ToListAsync());
+            return View(await _context.Departments
+                .Include(t => t.DepartmentName)
+                .ThenInclude(t => t.Translations).ToListAsync());
         }
 
         // GET: Admin/Departments/Details/5
@@ -35,6 +38,8 @@ namespace WebApp.Areas.Admin.Controllers
             }
 
             var department = await _context.Departments
+                .Include(t => t.DepartmentName)
+                    .ThenInclude(t => t.Translations)
                 .SingleOrDefaultAsync(m => m.DepartmentId == id);
             if (department == null)
             {
@@ -51,19 +56,18 @@ namespace WebApp.Areas.Admin.Controllers
         }
 
         // POST: Admin/Departments/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DepartmentId,DepartmentName,DepartmentNameEst")] Department department)
+        public async Task<IActionResult> Create(DepartmentVM vm)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(department);
+                vm.Department.DepartmentName = new MultiLangString(vm.DepartmentName);
+                _context.Add(vm.Department);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(department);
+            return View(vm);
         }
 
         // GET: Admin/Departments/Edit/5
@@ -74,22 +78,25 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var department = await _context.Departments.SingleOrDefaultAsync(m => m.DepartmentId == id);
+            var department = await _context.Departments
+                .Include(t => t.DepartmentName).ThenInclude(t => t.Translations)
+                .SingleOrDefaultAsync(m => m.DepartmentId == id);
             if (department == null)
             {
                 return NotFound();
             }
-            return View(department);
+            var vm = new DepartmentVM();
+            vm.DepartmentName = department.DepartmentName.ToString();
+            vm.Department = department;
+            return View(vm);
         }
 
         // POST: Admin/Departments/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DepartmentId,DepartmentName,DepartmentNameEst")] Department department)
+        public async Task<IActionResult> Edit(int id, DepartmentVM vm)
         {
-            if (id != department.DepartmentId)
+            if (id != vm.Department.DepartmentId)
             {
                 return NotFound();
             }
@@ -98,12 +105,19 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(department);
+                    vm.Department.DepartmentName =
+                        _context.MultiLangStrings
+                            .Include(t => t.Translations)
+                            .FirstOrDefault(m =>
+                            m.MultiLangStringId == vm.Department.DepartmentNameId) ?? new MultiLangString();
+                    vm.Department.DepartmentName.SetTranslation(vm.DepartmentName);
+
+                    _context.Update(vm.Department);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DepartmentExists(department.DepartmentId))
+                    if (!DepartmentExists(vm.Department.DepartmentId))
                     {
                         return NotFound();
                     }
@@ -114,7 +128,7 @@ namespace WebApp.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(department);
+            return View(vm);
         }
 
         // GET: Admin/Departments/Delete/5
@@ -126,6 +140,8 @@ namespace WebApp.Areas.Admin.Controllers
             }
 
             var department = await _context.Departments
+                .Include(T => T.DepartmentName)
+                .ThenInclude(t => t.Translations)
                 .SingleOrDefaultAsync(m => m.DepartmentId == id);
             if (department == null)
             {
@@ -140,7 +156,9 @@ namespace WebApp.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var department = await _context.Departments.SingleOrDefaultAsync(m => m.DepartmentId == id);
+            var department = await _context.Departments.Include(T => T.DepartmentName)
+                .ThenInclude(T => T.Translations)
+                .SingleOrDefaultAsync(m => m.DepartmentId == id);
             _context.Departments.Remove(department);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

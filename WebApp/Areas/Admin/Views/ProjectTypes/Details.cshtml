@@ -17,22 +17,10 @@
             @Html.DisplayFor(model => model.ProjectTypeName)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.ProjectTypeNameEst)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ProjectTypeNameEst)
-        </dd>
-        <dt>
             @Html.DisplayNameFor(model => model.ProjectTypeComments)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.ProjectTypeComments)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.ProjectTypeCommentsEst)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ProjectTypeCommentsEst)
+            @Html.Raw(Model.ProjectTypeComments)
         </dd>
     </dl>
 </div>

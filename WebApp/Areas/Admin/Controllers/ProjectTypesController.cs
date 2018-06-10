@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
-
+using WebApp.Areas.Admin.Models;
 
 namespace WebApp.Area.Admin.Controllers
 {
@@ -26,7 +26,8 @@ namespace WebApp.Area.Admin.Controllers
         // GET: ProjectTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ProjectTypes.ToListAsync());
+            return View(await _context.ProjectTypes.Include(t => t.ProjectTypeComments)
+                .ThenInclude(t => t.Translations).ToListAsync());
         }
 
         // GET: ProjectTypes/Details/5
@@ -38,6 +39,8 @@ namespace WebApp.Area.Admin.Controllers
             }
 
             var projectType = await _context.ProjectTypes
+                .Include(t => t.ProjectTypeComments)
+                .ThenInclude(t => t.Translations)
                 .SingleOrDefaultAsync(m => m.ProjectTypeId == id);
             if (projectType == null)
             {
@@ -54,19 +57,18 @@ namespace WebApp.Area.Admin.Controllers
         }
 
         // POST: ProjectTypes/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectTypeId,ProjectTypeName,ProjectTypeNameEst,ProjectTypeComments,ProjectTypeCommentsEst")] ProjectType projectType)
+        public async Task<IActionResult> Create(ProjectTypesVM vm)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(projectType);
+                vm.ProjectType.ProjectTypeComments = new MultiLangString(vm.ProjectTypeComments);
+                _context.Add(vm.ProjectType);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(projectType);
+            return View(vm);
         }
 
         // GET: ProjectTypes/Edit/5
@@ -77,22 +79,26 @@ namespace WebApp.Area.Admin.Controllers
                 return NotFound();
             }
 
-            var projectType = await _context.ProjectTypes.SingleOrDefaultAsync(m => m.ProjectTypeId == id);
+            var projectType = await _context.ProjectTypes
+                .Include(t => t.ProjectTypeComments)
+                .ThenInclude(t => t.Translations)
+                .SingleOrDefaultAsync(m => m.ProjectTypeId == id);
             if (projectType == null)
             {
                 return NotFound();
             }
-            return View(projectType);
+            var vm = new ProjectTypesVM();
+            vm.ProjectTypeComments = projectType.ProjectTypeComments.ToString();
+            vm.ProjectType = projectType;
+            return View(vm);
         }
 
         // POST: ProjectTypes/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProjectTypeId,ProjectTypeName,ProjectTypeNameEst,ProjectTypeComments,ProjectTypeCommentsEst")] ProjectType projectType)
+        public async Task<IActionResult> Edit(int id, ProjectTypesVM vm)
         {
-            if (id != projectType.ProjectTypeId)
+            if (id != vm.ProjectType.ProjectTypeId)
             {
                 return NotFound();
             }
@@ -101,12 +107,18 @@ namespace WebApp.Area.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(projectType);
+                    vm.ProjectType.ProjectTypeComments =
+                        _context.MultiLangStrings
+                            .Include(t => t.Translations)
+                            .FirstOrDefault(m =>
+                            m.MultiLangStringId == vm.ProjectType.ProjectTypeCommentsId) ?? new MultiLangString();
+                    vm.ProjectType.ProjectTypeComments.SetTranslation(vm.ProjectTypeComments);
+                    _context.Update(vm.ProjectType);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProjectTypeExists(projectType.ProjectTypeId))
+                    if (!ProjectTypeExists(vm.ProjectType.ProjectTypeId))
                     {
                         return NotFound();
                     }
@@ -117,7 +129,7 @@ namespace WebApp.Area.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(projectType);
+            return View(vm);
         }
 
         // GET: ProjectTypes/Delete/5
@@ -129,6 +141,8 @@ namespace WebApp.Area.Admin.Controllers
             }
 
             var projectType = await _context.ProjectTypes
+                .Include(i => i.ProjectTypeComments)
+                    .ThenInclude(i => i.Translations)
                 .SingleOrDefaultAsync(m => m.ProjectTypeId == id);
             if (projectType == null)
             {
@@ -143,7 +157,9 @@ namespace WebApp.Area.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var projectType = await _context.ProjectTypes.SingleOrDefaultAsync(m => m.ProjectTypeId == id);
+            var projectType = await _context.ProjectTypes.Include(t => t.ProjectTypeComments)
+                .ThenInclude(t => t.Translations)
+                .SingleOrDefaultAsync(m => m.ProjectTypeId == id);
             _context.ProjectTypes.Remove(projectType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

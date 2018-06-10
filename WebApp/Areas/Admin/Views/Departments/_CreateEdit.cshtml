@@ -1,0 +1,9 @@
+﻿@model WebApp.Areas.Admin.Models.DepartmentVM
+
+<input type="hidden" asp-for="Department.DepartmentName" />
+
+<div class="form-group">
+    <label asp-for="DepartmentName" class="control-label"></label>
+    <input asp-for="DepartmentName" class="form-control" />
+    <span asp-validation-for="DepartmentName" class="text-danger"></span>
+</div>

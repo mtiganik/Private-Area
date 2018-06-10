@@ -67,10 +67,10 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Department.DepartmentName)
+                @Html.Raw(item.Department.DepartmentName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UserStatus.UserStatusName)
+                @Html.Raw(item.UserStatus.UserStatusName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">@Resources.Common.Edit</a> |

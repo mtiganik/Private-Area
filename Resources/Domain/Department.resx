@@ -118,9 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DepartmentName" xml:space="preserve">
-    <value>Department name in English</value>
-  </data>
-  <data name="DepartmentNameEst" xml:space="preserve">
-    <value>Department name in Estonian</value>
+    <value>Department name</value>
   </data>
 </root>

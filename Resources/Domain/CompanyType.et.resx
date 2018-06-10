@@ -118,9 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CompanyTypeName" xml:space="preserve">
-    <value>Firma tüübi nimi inglise keeles</value>
-  </data>
-  <data name="CompanyTypeNameEst" xml:space="preserve">
-    <value>Firma tüübi nimi eesti keeles</value>
+    <value>Firma tüüp</value>
   </data>
 </root>

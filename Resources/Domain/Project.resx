@@ -121,10 +121,7 @@
     <value>Ends in</value>
   </data>
   <data name="ProjectName" xml:space="preserve">
-    <value>Project name in English</value>
-  </data>
-  <data name="ProjectNameEst" xml:space="preserve">
-    <value>Project name in Estonian</value>
+    <value>Project name </value>
   </data>
   <data name="ProjectStartDate" xml:space="preserve">
     <value>Starts in</value>

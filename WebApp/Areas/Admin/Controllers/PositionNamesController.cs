@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
-
+using WebApp.Areas.Admin.Models;
 
 namespace WebApp.Area.Admin.Controllers
 {
@@ -26,7 +26,7 @@ namespace WebApp.Area.Admin.Controllers
         // GET: PositionNames
         public async Task<IActionResult> Index()
         {
-            return View(await _context.PositionNames.ToListAsync());
+            return View(await _context.PositionNames.Include(i => i.PositionNameName).ThenInclude(i => i.Translations).ToListAsync());
         }
 
         // GET: PositionNames/Details/5
@@ -38,6 +38,8 @@ namespace WebApp.Area.Admin.Controllers
             }
 
             var positionName = await _context.PositionNames
+                .Include( t=> t.PositionNameName)
+                    .ThenInclude(t => t.Translations)
                 .SingleOrDefaultAsync(m => m.PositionNameId == id);
             if (positionName == null)
             {
@@ -54,19 +56,18 @@ namespace WebApp.Area.Admin.Controllers
         }
 
         // POST: PositionNames/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PositionNameId,PositionNameEng,PositionNameEst")] PositionName positionName)
+        public async Task<IActionResult> Create( PositionNameVM vm)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(positionName);
+                vm.PositionName.PositionNameName = new MultiLangString(vm.PositionNameName);
+                _context.Add(vm.PositionName);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(positionName);
+            return View(vm);
         }
 
         // GET: PositionNames/Edit/5
@@ -77,22 +78,26 @@ namespace WebApp.Area.Admin.Controllers
                 return NotFound();
             }
 
-            var positionName = await _context.PositionNames.SingleOrDefaultAsync(m => m.PositionNameId == id);
+            var positionName = await _context.PositionNames
+                .Include(t => t.PositionNameName)
+                    .ThenInclude(t => t.Translations)
+                   .SingleOrDefaultAsync(m => m.PositionNameId == id);
             if (positionName == null)
             {
                 return NotFound();
             }
-            return View(positionName);
+            var vm = new PositionNameVM();
+            vm.PositionNameName = positionName.PositionNameName.ToString();
+            vm.PositionName = positionName;
+            return View(vm);
         }
 
         // POST: PositionNames/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PositionNameId,PositionNameEng,PositionNameEst")] PositionName positionName)
+        public async Task<IActionResult> Edit(int id, PositionNameVM vm)
         {
-            if (id != positionName.PositionNameId)
+            if (id != vm.PositionName.PositionNameId)
             {
                 return NotFound();
             }
@@ -101,12 +106,20 @@ namespace WebApp.Area.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(positionName);
+                    vm.PositionName.PositionNameName =
+                        _context.MultiLangStrings
+                            .Include(t => t.Translations)
+                            .FirstOrDefault(m =>
+                            m.MultiLangStringId == vm.PositionName.PositionNameId) ?? new MultiLangString();
+                    vm.PositionName.PositionNameName.SetTranslation(vm.PositionNameName);
+
+
+                    _context.Update(vm.PositionName);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PositionNameExists(positionName.PositionNameId))
+                    if (!PositionNameExists(vm.PositionName.PositionNameId))
                     {
                         return NotFound();
                     }
@@ -117,7 +130,7 @@ namespace WebApp.Area.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(positionName);
+            return View(vm);
         }
 
         // GET: PositionNames/Delete/5
@@ -129,6 +142,8 @@ namespace WebApp.Area.Admin.Controllers
             }
 
             var positionName = await _context.PositionNames
+                .Include( t => t.PositionNameName)
+                    .ThenInclude( t => t.Translations)
                 .SingleOrDefaultAsync(m => m.PositionNameId == id);
             if (positionName == null)
             {
@@ -143,7 +158,10 @@ namespace WebApp.Area.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var positionName = await _context.PositionNames.SingleOrDefaultAsync(m => m.PositionNameId == id);
+            var positionName = await _context.PositionNames
+                .Include(t => t.PositionNameName)
+                .ThenInclude(t => t.Translations)
+                .SingleOrDefaultAsync(m => m.PositionNameId == id);
             _context.PositionNames.Remove(positionName);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

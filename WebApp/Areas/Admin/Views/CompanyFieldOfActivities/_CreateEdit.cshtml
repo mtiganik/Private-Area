@@ -1,5 +1,8 @@
 ﻿@model WebApp.Areas.Admin.Models.CompanyFieldOfActivityCreateEditVM
 
+<input type="hidden" asp-for="CompanyFieldOfActivity.ActivityName" />
+
+
 <div class="form-group">
     <label asp-for="ActivityName" class="control-label"></label>
     <input asp-for="ActivityName" class="form-control" />

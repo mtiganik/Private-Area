@@ -11,16 +11,10 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.PositionNameEng)
+            @Html.DisplayNameFor(model => model.PositionNameName)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.PositionNameEng)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.PositionNameEst)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.PositionNameEst)
+            @Html.Raw(Model.PositionNameName)
         </dd>
     </dl>
 </div>

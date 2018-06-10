@@ -14,40 +14,132 @@ namespace Helpers
         {
             if (!context.CompanyWorkerPositions.Any())
             {
-                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition
+                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition()
                 {
-                    PositionName = "HR",
-                    PositionNameEst = "Personalijuht"
+                    PositionName = new MultiLangString()
+                    {
+                        Value = "HR",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture ="en",
+                                Value = "HR"
+                            },
+                            new Translation()
+                            {
+                                Culture ="et",
+                                Value = "Personalijuht"
+                            }
+
+                        }
+                    }
                 });
 
-                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition
+                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition()
                 {
-                    PositionName = "Board Member",
-                    PositionNameEst = "juhatuse liige"
-                });
+                    PositionName = new MultiLangString()
+                    {
+                        Value = "Board Member",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture ="en",
+                                Value = "Board Member"
+                            },
+                            new Translation()
+                            {
+                                Culture ="et",
+                                Value = "juhatuse liige"
+                            }
 
-                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition
-                {
-                    PositionName = "CEO",
-                    PositionNameEst = "Juhatuse esimees"
+                        }
+                    }
                 });
-
-                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition
+                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition()
                 {
-                    PositionName = "Marketer",
-                    PositionNameEst = "Müügiosakonna esindaja"
+                    PositionName = new MultiLangString()
+                    {
+                        Value = "CEO",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture ="en",
+                                Value = "CEO"
+                            },
+                            new Translation()
+                            {
+                                Culture ="et",
+                                Value = "Juhatuse esimees"
+                            }
+
+                        }
+                    }
                 });
-
-                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition
+                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition()
                 {
-                    PositionName = "Secretary",
-                    PositionNameEst = "Sekretär"
+                    PositionName = new MultiLangString()
+                    {
+                        Value = "Marketer",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture ="en",
+                                Value = "Marketer"
+                            },
+                            new Translation()
+                            {
+                                Culture ="et",
+                                Value = "Müügiosakonna esindaja"
+                            }
+
+                        }
+                    }
                 });
-
-                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition
+                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition()
                 {
-                    PositionName = "IT person",
-                    PositionNameEst = "IT mees"
+                    PositionName = new MultiLangString()
+                    {
+                        Value = "Secretary",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture ="en",
+                                Value = "Secretary"
+                            },
+                            new Translation()
+                            {
+                                Culture ="et",
+                                Value = "Sekretär"
+                            }
+
+                        }
+                    }
+                });
+                context.CompanyWorkerPositions.Add(new CompanyWorkerPosition()
+                {
+                    PositionName = new MultiLangString()
+                    {
+                        Value = "IT person",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture ="en",
+                                Value = "IT person"
+                            },
+                            new Translation()
+                            {
+                                Culture ="et",
+                                Value = "IT mees"
+                            }
+
+                        }
+                    }
                 });
 
 
@@ -336,38 +428,93 @@ namespace Helpers
 
             if (!context.ProjectTypes.Any())
             {
-
                 context.ProjectTypes.Add(new ProjectType
                 {
-                    ProjectTypeName = "Job Fair",
-                    ProjectTypeNameEst = "Karjäärimess",
-                    ProjectTypeComments = "Companies have their stalls and present themselves",
-                    ProjectTypeCommentsEst = "Firmapäev, kus tudengid saavad firmadega tutvuda"
+                    ProjectTypeName = "Karjäärimess",
+                    ProjectTypeComments = new MultiLangString()
+                    {
+                        Value = "Companies have their stalls and present themselves",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture = "en",
+                                Value = "Companies have their stalls and present themselves"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Firmapäev, kus tudengid saavad firmadega tutvuda"
+                            }
+                        }
+                    }
                 });
 
                 context.ProjectTypes.Add(new ProjectType
                 {
-                    ProjectTypeName = "Carreer Day",
-                    ProjectTypeNameEst = "Firmapäev",
-                    ProjectTypeComments = "Seminar where company worker gives a lecture",
-                    ProjectTypeCommentsEst = "Firma esindaja tutvustab firma tegemisi"
+                    ProjectTypeName = "Firmapäev",
+                    ProjectTypeComments = new MultiLangString()
+                    {
+                        Value = "Seminar where company worker gives a lecture",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture = "en",
+                                Value = "Seminar where company worker gives a lecture"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Firma esindaja tutvustab firma tegemisi"
+                            }
+                        }
+                    }
                 });
-
                 context.ProjectTypes.Add(new ProjectType
                 {
-                    ProjectTypeName = "Summer Days",
-                    ProjectTypeNameEst = "Suvepäevad",
-                    ProjectTypeComments = "Annual organization Summerdays. If you havent been there, you haven't seen real life!",
-                    ProjectTypeCommentsEst = "Iga aastane organisatsiooni suvepäevade üritus. Sa pole elu näinud, kui seal pole olnud"
+                    ProjectTypeName = "Suvepäevad",
+                    ProjectTypeComments = new MultiLangString()
+                    {
+                        Value = "Annual organization Summerdays. If you havent been there, you haven't seen real life!",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture = "en",
+                                Value = "Annual organization Summerdays. If you havent been there, you haven't seen real life!"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Iga aastane organisatsiooni suvepäevade üritus. Sa pole elu näinud, kui seal pole olnud"
+                            }
+                        }
+                    }
                 });
-
                 context.ProjectTypes.Add(new ProjectType
                 {
-                    ProjectTypeName = "Winter Days",
-                    ProjectTypeNameEst = "Talvepäevad",
-                    ProjectTypeComments = "Annual organization WinterDays. If you havent been there, you haven't seen real life!",
-                    ProjectTypeCommentsEst = "Iga aastane organisatsiooni talvepäevade üritus. Sa pole elu näinud, kui seal pole olnud"
+                    ProjectTypeName = "Talvepäevad",
+                    ProjectTypeComments = new MultiLangString()
+                    {
+                        Value = "Annual organization WinterDays. If you havent been there, you haven't seen real life",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture = "en",
+                                Value = "Companies have their stalls and present themselves"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Iga aastane organisatsiooni talvepäevade üritus. Sa pole elu näinud, kui seal pole olnud"
+                            }
+                        }
+                    }
                 });
+
+
                 context.SaveChanges();
 
 
@@ -375,62 +522,192 @@ namespace Helpers
 
             if (!context.UserStatuses.Any())
             {
-                context.UserStatuses.Add(new UserStatus
+                context.UserStatuses.Add(new UserStatus()
                 {
-                    UserStatusName = "New member",
-                    UserStatusNameEst = "Uus liige"
+                    UserStatusName = new MultiLangString()
+                    {
+                        Value = "New member",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture ="en",
+                                Value = "New member"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Uus liige"
+                            }
+                        }
+                    }
                 });
 
-                context.UserStatuses.Add(new UserStatus
+                context.UserStatuses.Add(new UserStatus()
                 {
-                    UserStatusName = "Baby member",
-                    UserStatusNameEst = "Beebiliige"
+                    UserStatusName = new MultiLangString()
+                    {
+                        Value = "Baby member",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture ="en",
+                                Value = "Baby member"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Beebiliige"
+                            }
+                        }
+                    }
+                });
+                context.UserStatuses.Add(new UserStatus()
+                {
+                    UserStatusName = new MultiLangString()
+                    {
+                        Value = "Full member",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture ="en",
+                                Value = "Full member"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Täisliige"
+                            }
+                        }
+                    }
+                });
+                context.UserStatuses.Add(new UserStatus()
+                {
+                    UserStatusName = new MultiLangString()
+                    {
+                        Value = "Ex-member",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture ="en",
+                                Value = "Ex-member"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Eksliige"
+                            }
+                        }
+                    }
+                });
+                context.UserStatuses.Add(new UserStatus()
+                {
+                    UserStatusName = new MultiLangString()
+                    {
+                        Value = "Alumni",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture ="en",
+                                Value = "Alumni"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Vilistlane"
+                            }
+                        }
+                    }
                 });
 
-                context.UserStatuses.Add(new UserStatus
-                {
-                    UserStatusName = "Full member",
-                    UserStatusNameEst = "Täisliige"
-                });
-
-                context.UserStatuses.Add(new UserStatus
-                {
-                    UserStatusName = "Ex-member",
-                    UserStatusNameEst = "Eksliige"
-                });
-                context.UserStatuses.Add(new UserStatus
-                {
-                    UserStatusName = "Alumni",
-                    UserStatusNameEst = "Vilistlane"
-                });
             }
 
             if (!context.Departments.Any())
             {
                 context.Departments.Add(new Department
                 {
-                    DepartmentName = "IT Department",
-                    DepartmentNameEst = "IT Teaduskond"
+                    DepartmentName = new MultiLangString()
+                    {
+                        Value = "Engineering Department",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture = "en",
+                                Value = "Engineering Department"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Inseneriteaduskond"
+                            }
+                        }
+                    }
+                });
+
+                context.Departments.Add(new Department
+                {
+                    DepartmentName = new MultiLangString()
+                    {
+                        Value = "Department of Science",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture = "en",
+                                Value = "Department of Science"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Loodusteaduskond"
+                            }
+                        }
+                    }
                 });
                 context.Departments.Add(new Department
                 {
-                    DepartmentName = "Engineering Department",
-                    DepartmentNameEst = "Inseneriteaduskond"
+                    DepartmentName = new MultiLangString()
+                    {
+                        Value = "Department of Economics",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture = "en",
+                                Value = "Department of Economics"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Majandusteaduskond"
+                            }
+                        }
+                    }
                 });
                 context.Departments.Add(new Department
                 {
-                    DepartmentName = "Department of Science",
-                    DepartmentNameEst = "Loodusteaduskond"
-                });
-                context.Departments.Add(new Department
-                {
-                    DepartmentName = "Department of Economics",
-                    DepartmentNameEst = "Majandusteaduskond"
-                });
-                context.Departments.Add(new Department
-                {
-                    DepartmentName = "Estonian Marine Academics",
-                    DepartmentNameEst = "Eesti mereakadeemia"
+                    DepartmentName = new MultiLangString()
+                    {
+                        Value = "Estonian Marine Academics",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture = "en",
+                                Value = "Estonian Marine Academics"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Eesti mereakadeemia"
+                            }
+                        }
+                    }
                 });
             }
 
@@ -438,39 +715,127 @@ namespace Helpers
             {
                 context.PositionNames.Add(new PositionName
                 {
-                    PositionNameEng = "Project manager",
-                    PositionNameEst = "Projektijuht"
+                    PositionNameName = new MultiLangString()
+                    {
+                        Value = "Project manager",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture = "en",
+                                Value = "Project manager"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Projektijuht"
+                            }
+                        }
+                    }
                 });
 
                 context.PositionNames.Add(new PositionName
                 {
-                    PositionNameEng = "IT Coordinator",
-                    PositionNameEst = "IT koordinaator"
+                    PositionNameName = new MultiLangString()
+                    {
+                        Value = "IT Coordinator",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture = "en",
+                                Value = "IT Coordinator"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "IT koordinaator"
+                            }
+                        }
+                    }
                 });
-
                 context.PositionNames.Add(new PositionName
                 {
-                    PositionNameEng = "Sales lead",
-                    PositionNameEst = "Müügijuht"
+                    PositionNameName = new MultiLangString()
+                    {
+                        Value = "Sales lead",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture = "en",
+                                Value = "Sales lead"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Müügijuht"
+                            }
+                        }
+                    }
                 });
-
                 context.PositionNames.Add(new PositionName
                 {
-                    PositionNameEng = "Marketer",
-                    PositionNameEst = "Marketer"
+                    PositionNameName = new MultiLangString()
+                    {
+                        Value = "Marketer",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture = "en",
+                                Value = "Marketer"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Marketer"
+                            }
+                        }
+                    }
                 });
-
                 context.PositionNames.Add(new PositionName
                 {
-                    PositionNameEng = "Organizer",
-                    PositionNameEst = "Korraldaja"
+                    PositionNameName = new MultiLangString()
+                    {
+                        Value = "Organizer",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture = "en",
+                                Value = "Organizer"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Korraldaja"
+                            }
+                        }
+                    }
                 });
-
                 context.PositionNames.Add(new PositionName
                 {
-                    PositionNameEng = "Food responsible",
-                    PositionNameEst = "Toiduvastutaja"
+                    PositionNameName = new MultiLangString()
+                    {
+                        Value = "Food responsible",
+                        Translations = new List<Translation>()
+                        {
+                            new Translation()
+                            {
+                                Culture = "en",
+                                Value = "Food responsible"
+                            },
+                            new Translation()
+                            {
+                                Culture = "et",
+                                Value = "Toiduvastutaja"
+                            }
+                        }
+                    }
                 });
+
+
 
                 
             }
@@ -483,8 +848,7 @@ namespace Helpers
                     ProjectName = "Võti Tulevikku 2018",
                     ProjectStartDate = new DateTime(2018, 3, 23),
                     ProjectEndDate = new DateTime(2018, 3, 25),
-                    ProjectNameEst = "Võti Tulevikku 2018",
-                    ProjectType = context.ProjectTypes.Where(u => u.ProjectTypeName == "Job Fair").Single(),
+                    ProjectType = context.ProjectTypes.Where(u => u.ProjectTypeName == "Karjäärimess").Single(),
                 });
 
                 context.Projects.Add(new Project
@@ -492,8 +856,7 @@ namespace Helpers
                     ProjectName = "Summer Days 2018",
                     ProjectStartDate = new DateTime(2018, 7, 15),
                     ProjectEndDate = new DateTime(2018, 7, 16),
-                    ProjectNameEst = "Suvepäevad 2018",
-                    ProjectType = context.ProjectTypes.Where(u => u.ProjectTypeName == "Summer Days").Single(),
+                    ProjectType = context.ProjectTypes.Where(u => u.ProjectTypeName == "Suvepäevad").Single(),
                 });
 
                 context.Projects.Add(new Project
@@ -501,8 +864,7 @@ namespace Helpers
                     ProjectName = "Carreer Day 2017",
                     ProjectStartDate = new DateTime(2017, 11, 23),
                     ProjectEndDate = new DateTime(2017, 11, 24),
-                    ProjectNameEst = "Firmapäevad 2017",
-                    ProjectType = context.ProjectTypes.Where(u => u.ProjectTypeName == "Job Fair").Single(),
+                    ProjectType = context.ProjectTypes.Where(u => u.ProjectTypeName == "Firmapäev").Single(),
                 });
                 
 
@@ -551,11 +913,11 @@ namespace Helpers
                     Email = "mtiganik@gmail.com",
                     Address = "Sitsi 15-6, Tallinn",
                     Comments = "Like to Lead people",
-                    Department = context.Departments.Where(u => u.DepartmentName == "IT Department").Single(),
+                    Department = context.Departments.Where(u => u.DepartmentId==2).Single(),
                     Skype = "rohep2ike",
                     PhoneNumber = "55655828",
                     UserName = "mtiganik@gmail.com",
-                    UserStatus = context.UserStatuses.Where(u => u.UserStatusName == "Full member").Single(),
+                    UserStatus = context.UserStatuses.Where(u => u.UserStatusId == 3).Single(),
 
                 };
                 var res1 = userManager.CreateAsync(user1, userPass).Result;
@@ -574,11 +936,11 @@ namespace Helpers
                     Email = "LiisaKern@gmail.com",
                     Address = "Retke tee 8, 2401 Tallinn",
                     Comments = "Motivated for marketing",
-                    Department = context.Departments.Where(u => u.DepartmentName == "Department of Science").Single(),
+                    Department = context.Departments.Where(u => u.DepartmentId==4).Single(),
                     Skype = "LiisaKern123",
                     PhoneNumber = "5284532",
                     UserName = "LiisaKern@gmail.com",
-                    UserStatus = context.UserStatuses.Where(u => u.UserStatusName == "Baby member").Single(),
+                    UserStatus = context.UserStatuses.Where(u => u.UserStatusId == 4).Single(),
 
                 };
                 var res2 = userManager.CreateAsync(user2, userPass).Result;
@@ -596,11 +958,11 @@ namespace Helpers
                     Email = "tiitkass@gmail.com",
                     Address = "Lauresi tee 5",
                     Comments = "I'm good guitar player",
-                    Department = context.Departments.Where(u => u.DepartmentName == "Department of Economics").Single(),
+                    Department = context.Departments.Where(u => u.DepartmentId == 5).Single(),
                     Skype = "tkass",
                     PhoneNumber = "55842974",
                     UserName = "tiitkass@gmail.com",
-                    UserStatus = context.UserStatuses.Where(u => u.UserStatusName == "New member").Single(),
+                    UserStatus = context.UserStatuses.Where(u => u.UserStatusId == 5).Single(),
 
                 };
                 var res3 = userManager.CreateAsync(user3, userPass).Result;
@@ -616,11 +978,11 @@ namespace Helpers
                     Email = "akaver@gmail.com",
                     Address = "Harjumaa",
                     Comments = "IT",
-                    Department = context.Departments.Where(u => u.DepartmentName == "IT Department").Single(),
+                    Department = context.Departments.Where(u => u.DepartmentId == 2).Single(),
                     Skype = "akaver",
                     PhoneNumber = "65740213",
                     UserName = "akaver@gmail.com",
-                    UserStatus = context.UserStatuses.Where(u => u.UserStatusName == "Alumni").Single(),
+                    UserStatus = context.UserStatuses.Where(u => u.UserStatusId == 1).Single(),
 
                 };
                 var res4 = userManager.CreateAsync(user4, userPass).Result;
@@ -641,7 +1003,7 @@ namespace Helpers
                 context.Positions.Add(new Position
                 {
                     ProjectId = context.Projects.Single(u => u.ProjectName == "Võti Tulevikku 2018").ProjectId,
-                    PositionNameId = context.PositionNames.Single(u => u.PositionNameEng == "Project manager").PositionNameId,
+                    PositionNameId = context.PositionNames.Single(u => u.PositionNameId == 5).PositionNameId,
                     ApplicationUserId = context.ApplicationUser.Single(u => u.UserName == "mtiganik@gmail.com").Id,
                     IsMarketer = true,
 
@@ -650,7 +1012,7 @@ namespace Helpers
                 context.Positions.Add(new Position
                 {
                     Project = context.Projects.Where(u => u.ProjectName == "Võti Tulevikku 2018").Single(),
-                    PositionName = context.PositionNames.Where(u => u.PositionNameEng == "Sales lead").Single(),
+                    PositionName = context.PositionNames.Where(u => u.PositionNameId == 4).Single(),
                     ApplicationUser = context.ApplicationUser.Where(u => u.UserName == "LiisaKern@gmail.com").Single(),
                     IsMarketer = true,
                 });
@@ -658,7 +1020,7 @@ namespace Helpers
                 context.Positions.Add(new Position
                 {
                     Project = context.Projects.Where(u => u.ProjectName == "Võti Tulevikku 2018").Single(),
-                    PositionName = context.PositionNames.Where(u => u.PositionNameEng == "Organizer").Single(),
+                    PositionName = context.PositionNames.Where(u => u.PositionNameId == 2).Single(),
                     ApplicationUser = context.ApplicationUser.Where(u => u.UserName == "tiitkass@gmail.com").Single(),
                     IsMarketer = false,
                 });
@@ -666,7 +1028,7 @@ namespace Helpers
                 context.Positions.Add(new Position
                 {
                     Project = context.Projects.Where(u => u.ProjectName == "Summer Days 2018").Single(),
-                    PositionName = context.PositionNames.Where(u => u.PositionNameEng == "Project manager").Single(),
+                    PositionName = context.PositionNames.Where(u => u.PositionNameId == 5).Single(),
                     ApplicationUser = context.ApplicationUser.Where(u => u.UserName == "mtiganik@gmail.com").Single(),
                     IsMarketer = false,
                 });
@@ -674,7 +1036,7 @@ namespace Helpers
                 context.Positions.Add(new Position
                 {
                     Project = context.Projects.Where(u => u.ProjectName == "Summer Days 2018").Single(),
-                    PositionName = context.PositionNames.Where(u => u.PositionNameEng == "Food responsible").Single(),
+                    PositionName = context.PositionNames.Where(u => u.PositionNameId == 1).Single(),
                     ApplicationUser = context.ApplicationUser.Where(u => u.UserName == "akaver@gmail.com").Single(),
                     IsMarketer = false,
                 });
@@ -682,7 +1044,7 @@ namespace Helpers
                 context.Positions.Add(new Position
                 {
                     Project = context.Projects.Where(u => u.ProjectName == "Carreer Day 2017").Single(),
-                    PositionName = context.PositionNames.Where(u => u.PositionNameEng == "Project manager").Single(),
+                    PositionName = context.PositionNames.Where(u => u.PositionNameId == 5).Single(),
                     ApplicationUser = context.ApplicationUser.Where(u => u.UserName == "tiitkass@gmail.com").Single(),
                     IsMarketer = true,
                 });
@@ -690,7 +1052,7 @@ namespace Helpers
                 context.Positions.Add(new Position
                 {
                     Project = context.Projects.Where(u => u.ProjectName == "Carreer Day 2017").Single(),
-                    PositionName = context.PositionNames.Where(u => u.PositionNameEng == "Organizer").Single(),
+                    PositionName = context.PositionNames.Where(u => u.PositionNameId == 2).Single(),
                     ApplicationUser = context.ApplicationUser.Where(u => u.UserName == "mtiganik@gmail.com").Single(),
                     IsMarketer = true,
                 });

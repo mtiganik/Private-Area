@@ -13,10 +13,6 @@ namespace Domain
         [Display(Name = nameof(Resources.Domain.Project.ProjectName), ResourceType = typeof(Resources.Domain.Project))]
         public string ProjectName { get; set; }
 
-        [MaxLength(100)]
-        [Display(Name = nameof(Resources.Domain.Project.ProjectNameEst), ResourceType = typeof(Resources.Domain.Project))]
-        public string ProjectNameEst { get; set; }
-
         [DataType(DataType.Date)]
         [Display(Name = nameof(Resources.Domain.Project.ProjectStartDate), ResourceType = typeof(Resources.Domain.Project))]
         public DateTime ProjectStartDate { get; set; }

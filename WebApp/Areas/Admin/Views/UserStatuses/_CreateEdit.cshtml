@@ -1,0 +1,9 @@
+﻿@model WebApp.Areas.Admin.Models.UserStatusVM
+<input type="hidden" asp-for="UserStatus.UserStatusName" />
+
+
+<div class="form-group">
+    <label asp-for="UserStatusName" class="control-label"></label>
+    <input asp-for="UserStatusName" class="form-control" />
+    <span asp-validation-for="UserStatusName" class="text-danger"></span>
+</div>

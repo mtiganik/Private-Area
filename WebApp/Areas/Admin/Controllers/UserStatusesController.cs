@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
-
+using WebApp.Areas.Admin.Models;
 
 namespace WebApp.Area.Admin.Controllers
 {
@@ -26,7 +26,7 @@ namespace WebApp.Area.Admin.Controllers
         // GET: UserStatuses
         public async Task<IActionResult> Index()
         {
-            return View(await _context.UserStatuses.ToListAsync());
+            return View(await _context.UserStatuses.Include(t => t.UserStatusName).ThenInclude(t => t.Translations).ToListAsync());
         }
 
         // GET: UserStatuses/Details/5
@@ -38,6 +38,8 @@ namespace WebApp.Area.Admin.Controllers
             }
 
             var userStatus = await _context.UserStatuses
+                .Include(t => t.UserStatusName)
+                .ThenInclude(t => t.Translations)
                 .SingleOrDefaultAsync(m => m.UserStatusId == id);
             if (userStatus == null)
             {
@@ -54,19 +56,18 @@ namespace WebApp.Area.Admin.Controllers
         }
 
         // POST: UserStatuses/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserStatusId,UserStatusName,UserStatusNameEst")] UserStatus userStatus)
+        public async Task<IActionResult> Create(UserStatusVM vm)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(userStatus);
+                vm.UserStatus.UserStatusName = new MultiLangString(vm.UserStatusName);
+                _context.Add(vm.UserStatus);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(userStatus);
+            return View(vm);
         }
 
         // GET: UserStatuses/Edit/5
@@ -77,22 +78,24 @@ namespace WebApp.Area.Admin.Controllers
                 return NotFound();
             }
 
-            var userStatus = await _context.UserStatuses.SingleOrDefaultAsync(m => m.UserStatusId == id);
+            var userStatus = await _context.UserStatuses.Include(t => t.UserStatusName).ThenInclude(t => t.Translations).SingleOrDefaultAsync(m => m.UserStatusId == id);
             if (userStatus == null)
             {
                 return NotFound();
             }
-            return View(userStatus);
+            var vm = new UserStatusVM();
+            vm.UserStatusName = userStatus.UserStatusName.ToString();
+            vm.UserStatus = userStatus;
+
+            return View(vm);
         }
 
         // POST: UserStatuses/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserStatusId,UserStatusName,UserStatusNameEst")] UserStatus userStatus)
+        public async Task<IActionResult> Edit(int id, UserStatusVM vm)
         {
-            if (id != userStatus.UserStatusId)
+            if (id != vm.UserStatus.UserStatusId)
             {
                 return NotFound();
             }
@@ -101,12 +104,19 @@ namespace WebApp.Area.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(userStatus);
+                    vm.UserStatus.UserStatusName =
+                        _context.MultiLangStrings
+                            .Include(t => t.Translations)
+                            .FirstOrDefault(m =>
+                            m.MultiLangStringId == vm.UserStatus.UserStatusNameId) ?? new MultiLangString();
+                    vm.UserStatus.UserStatusName.SetTranslation(vm.UserStatusName);
+
+                    _context.Update(vm.UserStatus);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserStatusExists(userStatus.UserStatusId))
+                    if (!UserStatusExists(vm.UserStatus.UserStatusId))
                     {
                         return NotFound();
                     }
@@ -117,7 +127,7 @@ namespace WebApp.Area.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(userStatus);
+            return View(vm);
         }
 
         // GET: UserStatuses/Delete/5
@@ -129,6 +139,8 @@ namespace WebApp.Area.Admin.Controllers
             }
 
             var userStatus = await _context.UserStatuses
+                .Include(t => t.UserStatusName)
+                .ThenInclude(t => t.Translations)
                 .SingleOrDefaultAsync(m => m.UserStatusId == id);
             if (userStatus == null)
             {
@@ -143,7 +155,10 @@ namespace WebApp.Area.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var userStatus = await _context.UserStatuses.SingleOrDefaultAsync(m => m.UserStatusId == id);
+            var userStatus = await _context.UserStatuses
+                .Include(t => t.UserStatusName)
+                .ThenInclude(t => t.Translations)
+                .SingleOrDefaultAsync(m => m.UserStatusId == id);
             _context.UserStatuses.Remove(userStatus);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

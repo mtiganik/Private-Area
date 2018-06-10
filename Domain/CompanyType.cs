@@ -10,7 +10,7 @@ namespace Domain
     {
         public int CompanyTypeId { get; set; }
 
-        public int? CompanyTypeNameId { get; set; }
+        public int CompanyTypeNameId { get; set; }
         [ForeignKey(nameof(CompanyTypeNameId))]
         [Display(Name = nameof(Resources.Domain.CompanyType.CompanyTypeName), ResourceType = typeof(Resources.Domain.CompanyType))]
         public MultiLangString CompanyTypeName { get; set; }

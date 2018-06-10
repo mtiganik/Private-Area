@@ -118,9 +118,6 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ContactTypeName" xml:space="preserve">
-    <value>Inglisekeelne kontakti tüüp</value>
-  </data>
-  <data name="ContactTypeNameEst" xml:space="preserve">
-    <value>Eestikeelne kontakti tüüp</value>
+    <value>Kontakti tüüp</value>
   </data>
 </root>

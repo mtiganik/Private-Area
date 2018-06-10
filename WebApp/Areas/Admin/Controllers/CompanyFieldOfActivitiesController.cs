@@ -87,7 +87,11 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            return View(companyFieldOfActivity);
+
+            var vm = new CompanyFieldOfActivityCreateEditVM();
+            vm.ActivityName = companyFieldOfActivity.ActivityName.ToString();
+            vm.CompanyFieldOfActivity = companyFieldOfActivity;
+            return View(vm);
         }
 
         // POST: CompanyFieldOfActivities/Edit/5
@@ -104,7 +108,7 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 try
                 {
-                                        vm.CompanyFieldOfActivity.ActivityName =
+                  vm.CompanyFieldOfActivity.ActivityName =
                         _context.MultiLangStrings
                             .Include(t => t.Translations)
                             .FirstOrDefault(m =>
@@ -112,7 +116,7 @@ namespace WebApp.Areas.Admin.Controllers
                     vm.CompanyFieldOfActivity.ActivityName.SetTranslation(vm.ActivityName);
 
 
-                    _context.Update(vm.ActivityName);
+                    _context.Update(vm.CompanyFieldOfActivity);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -155,7 +159,9 @@ namespace WebApp.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var companyFieldOfActivity = await _context.CompanyFieldOfActivities.SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
+            var companyFieldOfActivity = await _context.CompanyFieldOfActivities.Include(t => t.ActivityName)
+                .ThenInclude(t => t.Translations)
+                .SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
             _context.CompanyFieldOfActivities.Remove(companyFieldOfActivity);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

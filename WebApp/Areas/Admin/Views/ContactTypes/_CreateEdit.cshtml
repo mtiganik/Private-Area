@@ -1,0 +1,11 @@
+﻿@model WebApp.Areas.Admin.Models.ContactTypeCreateEditVM
+
+<input type="hidden" asp-for="ContactType.ContactTypeName" />
+
+
+<div class="form-group">
+    <label asp-for="ContactTypeName" class="control-label"></label>
+    <input asp-for="ContactTypeName" class="form-control" />
+    <span asp-validation-for="ContactTypeName" class="text-danger"></span>
+</div>
+

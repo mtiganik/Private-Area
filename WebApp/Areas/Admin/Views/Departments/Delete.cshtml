@@ -15,13 +15,7 @@
             @Html.DisplayNameFor(model => model.DepartmentName)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.DepartmentName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.DepartmentNameEst)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.DepartmentNameEst)
+            @Html.Raw(Model.DepartmentName)
         </dd>
     </dl>
     

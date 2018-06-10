@@ -15,9 +15,6 @@
                 <th>
                     @Html.DisplayNameFor(model => model.PositionName)
                 </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PositionNameEst)
-                </th>
             <th></th>
         </tr>
     </thead>
@@ -25,10 +22,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.PositionName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PositionNameEst)
+                @Html.Raw(item.PositionName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.CompanyWorkerPositionId">@Resources.Common.Edit</a> |

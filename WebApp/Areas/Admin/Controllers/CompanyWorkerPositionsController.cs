@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DAL.App.EF;
 using Domain;
+using WebApp.Areas.Admin.Models;
 
 namespace WebApp.Areas.Admin.Controllers
 {
@@ -23,7 +24,8 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: Admin/CompanyWorkerPositions
         public async Task<IActionResult> Index()
         {
-            return View(await _context.CompanyWorkerPositions.ToListAsync());
+            var res = _context.CompanyWorkerPositions.Include(i => i.PositionName).ThenInclude(t => t.Translations);
+            return View(await res.ToListAsync());
         }
 
         // GET: Admin/CompanyWorkerPositions/Details/5
@@ -35,6 +37,7 @@ namespace WebApp.Areas.Admin.Controllers
             }
 
             var companyWorkerPosition = await _context.CompanyWorkerPositions
+                .Include(i => i.PositionName).ThenInclude(t => t.Translations)
                 .SingleOrDefaultAsync(m => m.CompanyWorkerPositionId == id);
             if (companyWorkerPosition == null)
             {
@@ -51,19 +54,18 @@ namespace WebApp.Areas.Admin.Controllers
         }
 
         // POST: Admin/CompanyWorkerPositions/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CompanyWorkerPositionId,PositionName,PositionNameEst")] CompanyWorkerPosition companyWorkerPosition)
+        public async Task<IActionResult> Create(CompanyWorkerPositionVM vm)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(companyWorkerPosition);
+                vm.CompanyWorkerPosition.PositionName = new MultiLangString(vm.PositionName);
+                _context.Add(vm.CompanyWorkerPosition);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(companyWorkerPosition);
+            return View(vm);
         }
 
         // GET: Admin/CompanyWorkerPositions/Edit/5
@@ -74,22 +76,26 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var companyWorkerPosition = await _context.CompanyWorkerPositions.SingleOrDefaultAsync(m => m.CompanyWorkerPositionId == id);
+            var companyWorkerPosition = await _context.CompanyWorkerPositions.Include(t => t.PositionName)
+                .ThenInclude(t => t.Translations)
+                .SingleOrDefaultAsync(m => m.CompanyWorkerPositionId == id);
             if (companyWorkerPosition == null)
             {
                 return NotFound();
             }
-            return View(companyWorkerPosition);
+            var vm = new CompanyWorkerPositionVM();
+
+            vm.PositionName = companyWorkerPosition.PositionName.ToString();
+            vm.CompanyWorkerPosition = companyWorkerPosition;
+            return View(vm);
         }
 
         // POST: Admin/CompanyWorkerPositions/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CompanyWorkerPositionId,PositionName,PositionNameEst")] CompanyWorkerPosition companyWorkerPosition)
+        public async Task<IActionResult> Edit(int id, CompanyWorkerPositionVM vm)
         {
-            if (id != companyWorkerPosition.CompanyWorkerPositionId)
+            if (id != vm.CompanyWorkerPosition.CompanyWorkerPositionId)
             {
                 return NotFound();
             }
@@ -98,12 +104,19 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(companyWorkerPosition);
+                    vm.CompanyWorkerPosition.PositionName =
+                        _context.MultiLangStrings
+                            .Include(t => t.Translations)
+                            .FirstOrDefault(m =>
+                            m.MultiLangStringId == vm.CompanyWorkerPosition.CompanyWorkerPositionId) ?? new MultiLangString();
+                    vm.CompanyWorkerPosition.PositionName.SetTranslation(vm.PositionName);
+
+                    _context.Update(vm.CompanyWorkerPosition);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CompanyWorkerPositionExists(companyWorkerPosition.CompanyWorkerPositionId))
+                    if (!CompanyWorkerPositionExists(vm.CompanyWorkerPosition.CompanyWorkerPositionId))
                     {
                         return NotFound();
                     }
@@ -114,7 +127,7 @@ namespace WebApp.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(companyWorkerPosition);
+            return View(vm);
         }
 
         // GET: Admin/CompanyWorkerPositions/Delete/5
@@ -125,7 +138,8 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var companyWorkerPosition = await _context.CompanyWorkerPositions
+            var companyWorkerPosition = await _context.CompanyWorkerPositions.Include(t => t.PositionName)
+                .ThenInclude(t => t.Translations)
                 .SingleOrDefaultAsync(m => m.CompanyWorkerPositionId == id);
             if (companyWorkerPosition == null)
             {
@@ -140,7 +154,9 @@ namespace WebApp.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var companyWorkerPosition = await _context.CompanyWorkerPositions.SingleOrDefaultAsync(m => m.CompanyWorkerPositionId == id);
+            var companyWorkerPosition = await _context.CompanyWorkerPositions
+                .Include(t => t.PositionName).ThenInclude(t => t.Translations)
+                .SingleOrDefaultAsync(m => m.CompanyWorkerPositionId == id);
             _context.CompanyWorkerPositions.Remove(companyWorkerPosition);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

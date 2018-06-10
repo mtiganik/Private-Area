@@ -70,20 +70,11 @@ namespace Resources.Domain {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Project name in English.
+        ///   Looks up a localized string similar to Project name .
         /// </summary>
         public static string ProjectName {
             get {
                 return ResourceManager.GetString("ProjectName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Project name in Estonian.
-        /// </summary>
-        public static string ProjectNameEst {
-            get {
-                return ResourceManager.GetString("ProjectNameEst", resourceCulture);
             }
         }
         

@@ -15,9 +15,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Projects.SingleOrDefault().ProjectName)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Projects.SingleOrDefault().ProjectNameEst)
-            </th>
 
             <th>
                 @Html.DisplayNameFor(model => model.Projects.SingleOrDefault().ProjectStartDate)
@@ -38,7 +35,7 @@
         @foreach (var item in Model.Projects)
         {
             string selectedRow = "";
-            if (item.ProjectId == (int?)ViewData["ProjectId"])
+            if (item.ProjectId == (int?)Model.ProjectId)
             {
                 selectedRow = "success";
 
@@ -48,10 +45,6 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ProjectName)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectNameEst)
-            </td>
-
             <td>
                 @Html.DisplayFor(modelItem => item.ProjectStartDate)
             </td>
@@ -92,12 +85,12 @@
 
                 </td>
                 <td>
-                    @item.PositionName.PositionNameEng
+                    @item.PositionName.PositionNameName
                 </td>
                 <td>
-                    <a asp-controller="Positions" asp-action="Edit" asp-route-id="@item.PositionId">Edit</a> |
-                    <a asp-controller="Positions" asp-action="Details" asp-route-id="@item.PositionId">Details</a> |
-                    <a asp-controller="Positions" asp-action="Delete" asp-route-id="@item.PositionId">Remove</a>
+                    <a asp-controller="Positions" asp-action="Edit" asp-route-id="@item.PositionId">@Resources.Common.Edit</a> |
+                    <a asp-controller="Positions" asp-action="Details" asp-route-id="@item.PositionId">@Resources.Common.Details</a> |
+                    <a asp-controller="Positions" asp-action="Delete" asp-route-id="@item.PositionId">@Resources.Common.Delete</a>
                 </td>
             </tr>
 

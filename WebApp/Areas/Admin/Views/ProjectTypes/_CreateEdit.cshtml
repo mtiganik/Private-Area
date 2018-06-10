@@ -1,0 +1,15 @@
+﻿@model WebApp.Areas.Admin.Models.ProjectTypesVM
+
+
+<div class="form-group">
+    <label asp-for="ProjectType.ProjectTypeName" class="control-label"></label>
+    <input asp-for="ProjectType.ProjectTypeName" class="form-control" />
+    <span asp-validation-for="ProjectType.ProjectTypeName" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <div class="form-group">
+        <label asp-for="ProjectType.ProjectTypeComments" class="control-label"></label>
+        <input asp-for="ProjectTypeComments" class="form-control" />
+        <span asp-validation-for="ProjectTypeComments" class="text-danger"></span>
+    </div>
+</div>

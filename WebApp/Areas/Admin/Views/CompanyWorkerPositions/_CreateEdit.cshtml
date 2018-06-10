@@ -1,0 +1,10 @@
+﻿@model WebApp.Areas.Admin.Models.CompanyWorkerPositionVM
+
+<input type="hidden" asp-for="CompanyWorkerPosition.PositionName" />
+
+
+<div class="form-group">
+    <label asp-for="PositionName" class="control-label"></label>
+    <input asp-for="PositionName" class="form-control" />
+    <span asp-validation-for="PositionName" class="text-danger"></span>
+</div>

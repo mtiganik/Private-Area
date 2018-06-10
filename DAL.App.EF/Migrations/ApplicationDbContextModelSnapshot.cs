@@ -158,7 +158,7 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("CompanyTypeId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("CompanyTypeNameId");
+                    b.Property<int>("CompanyTypeNameId");
 
                     b.HasKey("CompanyTypeId");
 
@@ -201,13 +201,11 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("CompanyWorkerPositionId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("PositionName")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("PositionNameEst")
-                        .HasMaxLength(100);
+                    b.Property<int>("PositionNameId");
 
                     b.HasKey("CompanyWorkerPositionId");
+
+                    b.HasIndex("PositionNameId");
 
                     b.ToTable("CompanyWorkerPositions");
                 });
@@ -272,13 +270,11 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("DepartmentId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("DepartmentName")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("DepartmentNameEst")
-                        .HasMaxLength(100);
+                    b.Property<int>("DepartmentNameId");
 
                     b.HasKey("DepartmentId");
+
+                    b.HasIndex("DepartmentNameId");
 
                     b.ToTable("Departments");
                 });
@@ -325,13 +321,11 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("PositionNameId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("PositionNameEng")
-                        .HasMaxLength(200);
-
-                    b.Property<string>("PositionNameEst")
-                        .HasMaxLength(200);
+                    b.Property<int>("PositionNameNameId");
 
                     b.HasKey("PositionNameId");
+
+                    b.HasIndex("PositionNameNameId");
 
                     b.ToTable("PositionNames");
                 });
@@ -344,9 +338,6 @@ namespace DAL.App.EF.Migrations
                     b.Property<DateTime>("ProjectEndDate");
 
                     b.Property<string>("ProjectName")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("ProjectNameEst")
                         .HasMaxLength(100);
 
                     b.Property<DateTime>("ProjectStartDate");
@@ -365,19 +356,14 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("ProjectTypeId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ProjectTypeComments")
-                        .HasMaxLength(300);
-
-                    b.Property<string>("ProjectTypeCommentsEst")
-                        .HasMaxLength(300);
+                    b.Property<int>("ProjectTypeCommentsId");
 
                     b.Property<string>("ProjectTypeName")
                         .HasMaxLength(100);
 
-                    b.Property<string>("ProjectTypeNameEst")
-                        .HasMaxLength(100);
-
                     b.HasKey("ProjectTypeId");
+
+                    b.HasIndex("ProjectTypeCommentsId");
 
                     b.ToTable("ProjectTypes");
                 });
@@ -407,13 +393,11 @@ namespace DAL.App.EF.Migrations
                     b.Property<int>("UserStatusId")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("UserStatusName")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("UserStatusNameEst")
-                        .HasMaxLength(100);
+                    b.Property<int>("UserStatusNameId");
 
                     b.HasKey("UserStatusId");
+
+                    b.HasIndex("UserStatusNameId");
 
                     b.ToTable("UserStatuses");
                 });
@@ -531,12 +515,12 @@ namespace DAL.App.EF.Migrations
                     b.HasOne("Domain.Department", "Department")
                         .WithMany("ApplicationUsers")
                         .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.UserStatus", "UserStatus")
                         .WithMany()
                         .HasForeignKey("UserStatusId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Domain.Company", b =>
@@ -544,12 +528,12 @@ namespace DAL.App.EF.Migrations
                     b.HasOne("Domain.CompanyFieldOfActivity", "CompanyFieldOfActivity")
                         .WithMany()
                         .HasForeignKey("CompanyFieldOfActivityId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.CompanyType", "CompanyType")
                         .WithMany()
                         .HasForeignKey("CompanyTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Domain.CompanyFieldOfActivity", b =>
@@ -557,7 +541,7 @@ namespace DAL.App.EF.Migrations
                     b.HasOne("Domain.MultiLangString", "ActivityName")
                         .WithMany()
                         .HasForeignKey("ActivityNameId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Domain.CompanyProject", b =>
@@ -565,19 +549,20 @@ namespace DAL.App.EF.Migrations
                     b.HasOne("Domain.Company", "Company")
                         .WithMany("CompanyProjects")
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.Project", "Project")
                         .WithMany("CompanyProjects")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Domain.CompanyType", b =>
                 {
                     b.HasOne("Domain.MultiLangString", "CompanyTypeName")
                         .WithMany()
-                        .HasForeignKey("CompanyTypeNameId");
+                        .HasForeignKey("CompanyTypeNameId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Domain.CompanyWorker", b =>
@@ -585,12 +570,20 @@ namespace DAL.App.EF.Migrations
                     b.HasOne("Domain.Company", "Company")
                         .WithMany("CompanyWorkers")
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.CompanyWorkerPosition", "CompanyWorkerPosition")
                         .WithMany("CompanyWorkers")
                         .HasForeignKey("CompanyWorkerPositionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Domain.CompanyWorkerPosition", b =>
+                {
+                    b.HasOne("Domain.MultiLangString", "PositionName")
+                        .WithMany()
+                        .HasForeignKey("PositionNameId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Domain.Contact", b =>
@@ -602,7 +595,7 @@ namespace DAL.App.EF.Migrations
                     b.HasOne("Domain.Company", "Company")
                         .WithMany("CompanyContacts")
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.CompanyWorker", "CompanyWorker")
                         .WithMany()
@@ -611,12 +604,12 @@ namespace DAL.App.EF.Migrations
                     b.HasOne("Domain.ContactType", "ContactType")
                         .WithMany()
                         .HasForeignKey("ContactTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Domain.ContactType", b =>
@@ -624,7 +617,15 @@ namespace DAL.App.EF.Migrations
                     b.HasOne("Domain.MultiLangString", "ContactTypeName")
                         .WithMany()
                         .HasForeignKey("ContactTypeNameId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Domain.Department", b =>
+                {
+                    b.HasOne("Domain.MultiLangString", "DepartmentName")
+                        .WithMany()
+                        .HasForeignKey("DepartmentNameId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Domain.Position", b =>
@@ -636,12 +637,20 @@ namespace DAL.App.EF.Migrations
                     b.HasOne("Domain.PositionName", "PositionName")
                         .WithMany("Positions")
                         .HasForeignKey("PositionNameId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.Project", "Project")
                         .WithMany("Positions")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Domain.PositionName", b =>
+                {
+                    b.HasOne("Domain.MultiLangString", "PositionNameName")
+                        .WithMany()
+                        .HasForeignKey("PositionNameNameId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Domain.Project", b =>
@@ -649,7 +658,15 @@ namespace DAL.App.EF.Migrations
                     b.HasOne("Domain.ProjectType", "ProjectType")
                         .WithMany()
                         .HasForeignKey("ProjectTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Domain.ProjectType", b =>
+                {
+                    b.HasOne("Domain.MultiLangString", "ProjectTypeComments")
+                        .WithMany()
+                        .HasForeignKey("ProjectTypeCommentsId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Domain.Translation", b =>
@@ -657,7 +674,15 @@ namespace DAL.App.EF.Migrations
                     b.HasOne("Domain.MultiLangString", "MultiLangString")
                         .WithMany("Translations")
                         .HasForeignKey("MultiLangStringId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("Domain.UserStatus", b =>
+                {
+                    b.HasOne("Domain.MultiLangString", "UserStatusName")
+                        .WithMany()
+                        .HasForeignKey("UserStatusNameId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

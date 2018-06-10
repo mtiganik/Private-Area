@@ -61,7 +61,7 @@ namespace Resources.Domain {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Description in English.
+        ///   Looks up a localized string similar to Description.
         /// </summary>
         public static string ProjectComments {
             get {
@@ -70,29 +70,11 @@ namespace Resources.Domain {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Desription in Estonian.
-        /// </summary>
-        public static string ProjectCommentsEst {
-            get {
-                return ResourceManager.GetString("ProjectCommentsEst", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Project type name in English.
+        ///   Looks up a localized string similar to Project type name.
         /// </summary>
         public static string ProjectTypeName {
             get {
                 return ResourceManager.GetString("ProjectTypeName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Project type name in Estonian.
-        /// </summary>
-        public static string ProjectTypeNameEst {
-            get {
-                return ResourceManager.GetString("ProjectTypeNameEst", resourceCulture);
             }
         }
     }

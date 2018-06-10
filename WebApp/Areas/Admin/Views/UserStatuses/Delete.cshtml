@@ -4,9 +4,9 @@
     ViewData["Title"] = "Delete";
 }
 
-<h2>Delete</h2>
+<h2>@Resources.Common.Delete</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>@Resources.Common.AreYouSure</h3>
 <div>
     <h4>UserStatus</h4>
     <hr />
@@ -15,19 +15,13 @@
             @Html.DisplayNameFor(model => model.UserStatusName)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.UserStatusName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.UserStatusNameEst)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.UserStatusNameEst)
+            @Html.Raw(Model.UserStatusName)
         </dd>
     </dl>
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="UserStatusId" />
-        <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="@Resources.Common.Delete" class="btn btn-default" /> |
+        <a asp-action="Index">@Resources.Common.BackToList</a>
     </form>
 </div>

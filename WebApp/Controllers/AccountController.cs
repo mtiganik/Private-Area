@@ -239,7 +239,7 @@ namespace WebApp.Controllers
                     Skype = model.ApplicationUser.Skype,
                     Comments = model.ApplicationUser.Comments,
                     Address = model.ApplicationUser.Address,
-                    UserStatus = _context.UserStatuses.Where(u => u.UserStatusName == "New member").Single(),
+                    UserStatus = _context.UserStatuses.Where(u => u.UserStatusId == 5).Single(),
                 };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)

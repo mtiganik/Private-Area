@@ -121,10 +121,7 @@
     <value>Lõppeb</value>
   </data>
   <data name="ProjectName" xml:space="preserve">
-    <value>Inglisekeelne projekti nimi </value>
-  </data>
-  <data name="ProjectNameEst" xml:space="preserve">
-    <value>Eestikeelne projekti nimi</value>
+    <value>Projekti nimi </value>
   </data>
   <data name="ProjectStartDate" xml:space="preserve">
     <value>Algab</value>

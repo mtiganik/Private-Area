@@ -83,7 +83,11 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            return View(contactType);
+
+            var vm = new ContactTypeCreateEditVM();
+            vm.ContactTypeName = contactType.ContactTypeName.ToString();
+            vm.ContactType = contactType;
+            return View(vm);
         }
 
         // POST: Admin/ContactTypes/Edit/5

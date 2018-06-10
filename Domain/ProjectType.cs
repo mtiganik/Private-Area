@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Domain
@@ -13,17 +14,11 @@ namespace Domain
         [Display(Name = nameof(Resources.Domain.ProjectType.ProjectTypeName), ResourceType = typeof(Resources.Domain.ProjectType))]
         public string ProjectTypeName { get; set; }
 
-        [MaxLength(100)]
-        [Display(Name = nameof(Resources.Domain.ProjectType.ProjectTypeNameEst), ResourceType = typeof(Resources.Domain.ProjectType))]
-        public string ProjectTypeNameEst { get; set; }
+        public int ProjectTypeCommentsId { get; set; }
 
-        [MaxLength(300)]
+        [ForeignKey(nameof(ProjectTypeCommentsId))]
         [Display(Name = nameof(Resources.Domain.ProjectType.ProjectComments), ResourceType = typeof(Resources.Domain.ProjectType))]
-        public string ProjectTypeComments { get; set; }
-
-        [MaxLength(300)]
-        [Display(Name = nameof(Resources.Domain.ProjectType.ProjectCommentsEst), ResourceType = typeof(Resources.Domain.ProjectType))]
-        public string ProjectTypeCommentsEst { get; set; }
+        public MultiLangString ProjectTypeComments { get; set; }
 
 
     }

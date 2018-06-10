@@ -24,34 +24,6 @@ namespace DAL.App.EF.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CompanyWorkerPositions",
-                columns: table => new
-                {
-                    CompanyWorkerPositionId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    PositionName = table.Column<string>(maxLength: 100, nullable: true),
-                    PositionNameEst = table.Column<string>(maxLength: 100, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CompanyWorkerPositions", x => x.CompanyWorkerPositionId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Departments",
-                columns: table => new
-                {
-                    DepartmentId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    DepartmentName = table.Column<string>(maxLength: 100, nullable: true),
-                    DepartmentNameEst = table.Column<string>(maxLength: 100, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Departments", x => x.DepartmentId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MultiLangStrings",
                 columns: table => new
                 {
@@ -62,50 +34,6 @@ namespace DAL.App.EF.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MultiLangStrings", x => x.MultiLangStringId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PositionNames",
-                columns: table => new
-                {
-                    PositionNameId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    PositionNameEng = table.Column<string>(maxLength: 200, nullable: true),
-                    PositionNameEst = table.Column<string>(maxLength: 200, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PositionNames", x => x.PositionNameId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProjectTypes",
-                columns: table => new
-                {
-                    ProjectTypeId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    ProjectTypeComments = table.Column<string>(maxLength: 300, nullable: true),
-                    ProjectTypeCommentsEst = table.Column<string>(maxLength: 300, nullable: true),
-                    ProjectTypeName = table.Column<string>(maxLength: 100, nullable: true),
-                    ProjectTypeNameEst = table.Column<string>(maxLength: 100, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProjectTypes", x => x.ProjectTypeId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserStatuses",
-                columns: table => new
-                {
-                    UserStatusId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    UserStatusName = table.Column<string>(maxLength: 100, nullable: true),
-                    UserStatusNameEst = table.Column<string>(maxLength: 100, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserStatuses", x => x.UserStatusId);
                 });
 
             migrationBuilder.CreateTable(
@@ -145,7 +73,7 @@ namespace DAL.App.EF.Migrations
                         column: x => x.ActivityNameId,
                         principalTable: "MultiLangStrings",
                         principalColumn: "MultiLangStringId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -154,7 +82,7 @@ namespace DAL.App.EF.Migrations
                 {
                     CompanyTypeId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CompanyTypeNameId = table.Column<int>(nullable: true)
+                    CompanyTypeNameId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -162,6 +90,25 @@ namespace DAL.App.EF.Migrations
                     table.ForeignKey(
                         name: "FK_CompanyTypes_MultiLangStrings_CompanyTypeNameId",
                         column: x => x.CompanyTypeNameId,
+                        principalTable: "MultiLangStrings",
+                        principalColumn: "MultiLangStringId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CompanyWorkerPositions",
+                columns: table => new
+                {
+                    CompanyWorkerPositionId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    PositionNameId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompanyWorkerPositions", x => x.CompanyWorkerPositionId);
+                    table.ForeignKey(
+                        name: "FK_CompanyWorkerPositions_MultiLangStrings_PositionNameId",
+                        column: x => x.PositionNameId,
                         principalTable: "MultiLangStrings",
                         principalColumn: "MultiLangStringId",
                         onDelete: ReferentialAction.Restrict);
@@ -183,7 +130,65 @@ namespace DAL.App.EF.Migrations
                         column: x => x.ContactTypeNameId,
                         principalTable: "MultiLangStrings",
                         principalColumn: "MultiLangStringId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Departments",
+                columns: table => new
+                {
+                    DepartmentId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    DepartmentNameId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Departments", x => x.DepartmentId);
+                    table.ForeignKey(
+                        name: "FK_Departments_MultiLangStrings_DepartmentNameId",
+                        column: x => x.DepartmentNameId,
+                        principalTable: "MultiLangStrings",
+                        principalColumn: "MultiLangStringId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PositionNames",
+                columns: table => new
+                {
+                    PositionNameId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    PositionNameNameId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PositionNames", x => x.PositionNameId);
+                    table.ForeignKey(
+                        name: "FK_PositionNames_MultiLangStrings_PositionNameNameId",
+                        column: x => x.PositionNameNameId,
+                        principalTable: "MultiLangStrings",
+                        principalColumn: "MultiLangStringId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProjectTypes",
+                columns: table => new
+                {
+                    ProjectTypeId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ProjectTypeCommentsId = table.Column<int>(nullable: false),
+                    ProjectTypeName = table.Column<string>(maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProjectTypes", x => x.ProjectTypeId);
+                    table.ForeignKey(
+                        name: "FK_ProjectTypes_MultiLangStrings_ProjectTypeCommentsId",
+                        column: x => x.ProjectTypeCommentsId,
+                        principalTable: "MultiLangStrings",
+                        principalColumn: "MultiLangStringId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -204,7 +209,55 @@ namespace DAL.App.EF.Migrations
                         column: x => x.MultiLangStringId,
                         principalTable: "MultiLangStrings",
                         principalColumn: "MultiLangStringId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserStatuses",
+                columns: table => new
+                {
+                    UserStatusId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserStatusNameId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserStatuses", x => x.UserStatusId);
+                    table.ForeignKey(
+                        name: "FK_UserStatuses_MultiLangStrings_UserStatusNameId",
+                        column: x => x.UserStatusNameId,
+                        principalTable: "MultiLangStrings",
+                        principalColumn: "MultiLangStringId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Companies",
+                columns: table => new
+                {
+                    CompanyId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CompanyFieldOfActivityId = table.Column<int>(nullable: false),
+                    CompanyName = table.Column<string>(maxLength: 100, nullable: true),
+                    CompanyRegistrationName = table.Column<string>(maxLength: 200, nullable: true),
+                    CompanyTypeId = table.Column<int>(nullable: false),
+                    CompanyWebsite = table.Column<string>(maxLength: 200, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Companies", x => x.CompanyId);
+                    table.ForeignKey(
+                        name: "FK_Companies_CompanyFieldOfActivities_CompanyFieldOfActivityId",
+                        column: x => x.CompanyFieldOfActivityId,
+                        principalTable: "CompanyFieldOfActivities",
+                        principalColumn: "CompanyFieldOfActivityId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Companies_CompanyTypes_CompanyTypeId",
+                        column: x => x.CompanyTypeId,
+                        principalTable: "CompanyTypes",
+                        principalColumn: "CompanyTypeId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -215,7 +268,6 @@ namespace DAL.App.EF.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ProjectEndDate = table.Column<DateTime>(nullable: false),
                     ProjectName = table.Column<string>(maxLength: 100, nullable: true),
-                    ProjectNameEst = table.Column<string>(maxLength: 100, nullable: true),
                     ProjectStartDate = table.Column<DateTime>(nullable: false),
                     ProjectTypeId = table.Column<int>(nullable: false)
                 },
@@ -227,7 +279,7 @@ namespace DAL.App.EF.Migrations
                         column: x => x.ProjectTypeId,
                         principalTable: "ProjectTypes",
                         principalColumn: "ProjectTypeId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -265,42 +317,69 @@ namespace DAL.App.EF.Migrations
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "DepartmentId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AspNetUsers_UserStatuses_UserStatusId",
                         column: x => x.UserStatusId,
                         principalTable: "UserStatuses",
                         principalColumn: "UserStatusId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Companies",
+                name: "CompanyWorkers",
                 columns: table => new
                 {
-                    CompanyId = table.Column<int>(nullable: false)
+                    CompanyWorkerId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CompanyFieldOfActivityId = table.Column<int>(nullable: false),
-                    CompanyName = table.Column<string>(maxLength: 100, nullable: true),
-                    CompanyRegistrationName = table.Column<string>(maxLength: 200, nullable: true),
-                    CompanyTypeId = table.Column<int>(nullable: false),
-                    CompanyWebsite = table.Column<string>(maxLength: 200, nullable: true)
+                    CompanyId = table.Column<int>(nullable: false),
+                    CompanyWorkerPositionId = table.Column<int>(nullable: false),
+                    EntryAdded = table.Column<DateTime>(nullable: false),
+                    WorkerEmail = table.Column<string>(maxLength: 100, nullable: true),
+                    WorkerName = table.Column<string>(maxLength: 100, nullable: true),
+                    WorkerPhone = table.Column<string>(maxLength: 100, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Companies", x => x.CompanyId);
+                    table.PrimaryKey("PK_CompanyWorkers", x => x.CompanyWorkerId);
                     table.ForeignKey(
-                        name: "FK_Companies_CompanyFieldOfActivities_CompanyFieldOfActivityId",
-                        column: x => x.CompanyFieldOfActivityId,
-                        principalTable: "CompanyFieldOfActivities",
-                        principalColumn: "CompanyFieldOfActivityId",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_CompanyWorkers_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "CompanyId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Companies_CompanyTypes_CompanyTypeId",
-                        column: x => x.CompanyTypeId,
-                        principalTable: "CompanyTypes",
-                        principalColumn: "CompanyTypeId",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_CompanyWorkers_CompanyWorkerPositions_CompanyWorkerPositionId",
+                        column: x => x.CompanyWorkerPositionId,
+                        principalTable: "CompanyWorkerPositions",
+                        principalColumn: "CompanyWorkerPositionId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CompanyProjects",
+                columns: table => new
+                {
+                    CompanyProjectId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CompanyId = table.Column<int>(nullable: false),
+                    ProjectId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompanyProjects", x => x.CompanyProjectId);
+                    table.ForeignKey(
+                        name: "FK_CompanyProjects_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "CompanyId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_CompanyProjects_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "ProjectId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -413,69 +492,13 @@ namespace DAL.App.EF.Migrations
                         column: x => x.PositionNameId,
                         principalTable: "PositionNames",
                         principalColumn: "PositionNameId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Positions_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "ProjectId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CompanyProjects",
-                columns: table => new
-                {
-                    CompanyProjectId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CompanyId = table.Column<int>(nullable: false),
-                    ProjectId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CompanyProjects", x => x.CompanyProjectId);
-                    table.ForeignKey(
-                        name: "FK_CompanyProjects_Companies_CompanyId",
-                        column: x => x.CompanyId,
-                        principalTable: "Companies",
-                        principalColumn: "CompanyId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CompanyProjects_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
-                        principalColumn: "ProjectId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CompanyWorkers",
-                columns: table => new
-                {
-                    CompanyWorkerId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CompanyId = table.Column<int>(nullable: false),
-                    CompanyWorkerPositionId = table.Column<int>(nullable: false),
-                    EntryAdded = table.Column<DateTime>(nullable: false),
-                    WorkerEmail = table.Column<string>(maxLength: 100, nullable: true),
-                    WorkerName = table.Column<string>(maxLength: 100, nullable: true),
-                    WorkerPhone = table.Column<string>(maxLength: 100, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CompanyWorkers", x => x.CompanyWorkerId);
-                    table.ForeignKey(
-                        name: "FK_CompanyWorkers_Companies_CompanyId",
-                        column: x => x.CompanyId,
-                        principalTable: "Companies",
-                        principalColumn: "CompanyId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CompanyWorkers_CompanyWorkerPositions_CompanyWorkerPositionId",
-                        column: x => x.CompanyWorkerPositionId,
-                        principalTable: "CompanyWorkerPositions",
-                        principalColumn: "CompanyWorkerPositionId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -509,7 +532,7 @@ namespace DAL.App.EF.Migrations
                         column: x => x.CompanyId,
                         principalTable: "Companies",
                         principalColumn: "CompanyId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Contacts_CompanyWorkers_CompanyWorkerId",
                         column: x => x.CompanyWorkerId,
@@ -521,13 +544,13 @@ namespace DAL.App.EF.Migrations
                         column: x => x.ContactTypeId,
                         principalTable: "ContactTypes",
                         principalColumn: "ContactTypeId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Contacts_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "ProjectId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -610,6 +633,11 @@ namespace DAL.App.EF.Migrations
                 column: "CompanyTypeNameId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CompanyWorkerPositions_PositionNameId",
+                table: "CompanyWorkerPositions",
+                column: "PositionNameId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CompanyWorkers_CompanyId",
                 table: "CompanyWorkers",
                 column: "CompanyId");
@@ -650,6 +678,16 @@ namespace DAL.App.EF.Migrations
                 column: "ContactTypeNameId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Departments_DepartmentNameId",
+                table: "Departments",
+                column: "DepartmentNameId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PositionNames_PositionNameNameId",
+                table: "PositionNames",
+                column: "PositionNameNameId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Positions_ApplicationUserId",
                 table: "Positions",
                 column: "ApplicationUserId");
@@ -670,9 +708,19 @@ namespace DAL.App.EF.Migrations
                 column: "ProjectTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProjectTypes_ProjectTypeCommentsId",
+                table: "ProjectTypes",
+                column: "ProjectTypeCommentsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Translations_MultiLangStringId",
                 table: "Translations",
                 column: "MultiLangStringId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserStatuses_UserStatusNameId",
+                table: "UserStatuses",
+                column: "UserStatusNameId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

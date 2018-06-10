@@ -61,20 +61,11 @@ namespace Resources.Domain {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Department name in English.
+        ///   Looks up a localized string similar to Department name.
         /// </summary>
         public static string DepartmentName {
             get {
                 return ResourceManager.GetString("DepartmentName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Department name in Estonian.
-        /// </summary>
-        public static string DepartmentNameEst {
-            get {
-                return ResourceManager.GetString("DepartmentNameEst", resourceCulture);
             }
         }
     }
