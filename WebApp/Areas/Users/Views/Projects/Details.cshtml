@@ -22,16 +22,10 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Resources.WebApp.Areas.Users.Projects.Details.ProjectNameEnglish
+            @Resources.WebApp.Areas.Users.Projects.Details.ProjectName
         </dt>
         <dd>
             @Html.DisplayFor(model => model.SelectedProject.ProjectName)
-        </dd>
-        <dt>
-            @Resources.WebApp.Areas.Users.Projects.Details.ProjectNameEst
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.SelectedProject.ProjectNameEst)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.SelectedProject.ProjectStartDate)
@@ -49,7 +43,8 @@
             @Html.DisplayNameFor(model => model.SelectedProject.ProjectType)
         </dt>
         <dd>
-            @( isEnglish ? Html.DisplayFor(model => model.SelectedProject.ProjectType.ProjectTypeName) : Html.DisplayFor(model => model.SelectedProject.ProjectType.ProjectTypeNameEst))
+            @*@( isEnglish ? Html.DisplayFor(model => model.SelectedProject.ProjectType.ProjectTypeName) : Html.DisplayFor(model => model.SelectedProject.ProjectType.ProjectTypeNameEst))*@
+            @Html.DisplayFor(model => model.SelectedProject.ProjectType.ProjectTypeName)
         </dd>
     </dl>
 </div>
@@ -62,7 +57,8 @@
 
             @foreach (var item in Model.SelectedProject.Positions)
             {
-                <dt> @(isEnglish ? item.PositionName.PositionNameEng : item.PositionName.PositionNameEst) </dt>
+                @*<dt> @(isEnglish ? item.PositionName.PositionNameEng : item.PositionName.PositionNameEst) </dt>*@
+                <dt> @item.PositionName.PositionNameName </dt>
                 <dd> @item.ApplicationUser.FullName</dd>
 
             }

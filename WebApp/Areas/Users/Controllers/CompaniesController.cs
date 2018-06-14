@@ -38,7 +38,13 @@ namespace WebApp.Areas.Users.Controllers
         // GET: Companies
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Companies.Include(c => c.CompanyFieldOfActivity).Include(c => c.CompanyType);
+            var applicationDbContext = _context.Companies
+                .Include(c => c.CompanyFieldOfActivity)
+                .ThenInclude(c => c.ActivityName)
+                    .ThenInclude(c => c.Translations)
+                .Include(c => c.CompanyType)
+                    .ThenInclude(c => c.CompanyTypeName)
+                        .ThenInclude(c => c.Translations);
             
 
             return View(await applicationDbContext.ToListAsync());
@@ -56,25 +62,33 @@ namespace WebApp.Areas.Users.Controllers
                 .Include(i => i.CompanyProjects)
                     .ThenInclude(i => i.Project)
                 .Include(i => i.CompanyType)
+                    .ThenInclude(i => i.CompanyTypeName)
+                        .ThenInclude(i => i.Translations)
                 .Include(i => i.CompanyWorkers)
                     .ThenInclude(i => i.CompanyWorkerPosition)
+                        .ThenInclude(i => i.PositionName)
+                            .ThenInclude(i => i.Translations)
                 .Include(i => i.CompanyFieldOfActivity)
+                    .ThenInclude(i => i.ActivityName)
+                        .ThenInclude(i => i.Translations)
                 .AsNoTracking()
                 .SingleOrDefaultAsync();
 
             vm.Contacts = await _context.Contacts.Where(u => u.CompanyId == id)
                 .Include(i => i.ApplicationUser)
                 .Include(i => i.ContactType)
+                    .ThenInclude(i => i.ContactTypeName)
+                        .ThenInclude(i => i.Translations)
                 .Include(i => i.CompanyWorker)
                 .Include(i => i.Company)
                 .Include(i => i.Project)
                 .AsNoTracking()
                 .ToListAsync();
 
-            vm.WorkerPositionSelectList = new SelectList(_context.CompanyWorkerPositions, "CompanyWorkerPositionId", IsEnglish() ? "PositionName" : "PositionNameEst");
-            vm.CompanyWorkerSelectList = new SelectList(_context.CompanyWorkers.Where(u => u.CompanyId == id), "CompanyWorkerId", "WorkerName");
-            vm.ProjectSelectList = new SelectList(_context.Projects, "ProjectId", IsEnglish() ? "ProjectName" : "ProjectNameEst");
-            vm.ContactTypeSelectList = new SelectList(_context.ContactTypes, "ContactTypeId", IsEnglish() ? "ContactTypeName" : "ContactTypeNameEst");
+            vm.WorkerPositionSelectList = new SelectList(_context.CompanyWorkerPositions.Include(i => i.PositionName).ThenInclude(i => i.Translations), nameof(CompanyWorkerPosition.CompanyWorkerPositionId), nameof(CompanyWorkerPosition.PositionName));
+            vm.CompanyWorkerSelectList = new SelectList(_context.CompanyWorkers.Where(u => u.CompanyId == id), nameof(CompanyWorker.CompanyWorkerId), nameof(CompanyWorker.WorkerName));
+            vm.ProjectSelectList = new SelectList(_context.Projects, nameof(Project.ProjectId), nameof(Project.ProjectName));
+            vm.ContactTypeSelectList = new SelectList(_context.ContactTypes.Include(i => i.ContactTypeName).ThenInclude(i => i.Translations), nameof(ContactType.ContactTypeId), nameof(ContactType.ContactTypeName));
 
             
 
@@ -89,22 +103,33 @@ namespace WebApp.Areas.Users.Controllers
         // GET: Companies/Create
         public IActionResult Create(int? fromProject)
         {
-            if(fromProject != null)
+            var vm = new CompaniesCreateEditViewModel();
+            if (fromProject != null)
             {
-                ViewBag.fromProject = fromProject;
+                vm.fromProject = fromProject;
+                //ViewBag.fromProject = fromProject;
             }
-            ViewData["CompanyFieldOfActivityId"] = new SelectList(_context.CompanyFieldOfActivities, "CompanyFieldOfActivityId", IsEnglish() ? "ActivityName" : "ActivityNameEst");
-            ViewData["CompanyTypeId"] = new SelectList(_context.CompanyTypes, "CompanyTypeId", IsEnglish() ? "CompanyTypeName":"CompanyTypeNameEst");
-            return View();
+            vm.CompanyFieldOfActivitesSelectList = new SelectList(_context.CompanyFieldOfActivities
+                .Include(i => i.ActivityName)
+                .ThenInclude(i => i.Translations)
+                ,nameof(CompanyFieldOfActivity.CompanyFieldOfActivityId)
+                ,nameof(CompanyFieldOfActivity.ActivityName));
+
+            vm.CompanyTypesSelectList = new SelectList(_context.CompanyTypes
+                .Include(i => i.CompanyTypeName)
+                .ThenInclude(i => i.Translations)
+                , nameof(CompanyType.CompanyTypeId)
+                , nameof(CompanyType.CompanyTypeName));
+            return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int? fromProject, [Bind("CompanyId,CompanyName,CompanyRegistrationName,CompanyWebsite,CompanyTypeId,CompanyFieldOfActivityId")] Company company)
+        public async Task<IActionResult> Create(int? fromProject, CompaniesCreateEditViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                await  _context.Companies.AddAsync(company);
+                await  _context.Companies.AddAsync(vm.Company);
                     //_context.Add(company);
                 await _context.SaveChangesAsync();
                 if(fromProject != null)
@@ -114,10 +139,21 @@ namespace WebApp.Areas.Users.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            vm.CompanyFieldOfActivitesSelectList = new SelectList(_context.CompanyFieldOfActivities
+                .Include(i => i.ActivityName)
+                .ThenInclude(i => i.Translations)
+                , nameof(CompanyFieldOfActivity.CompanyFieldOfActivityId)
+                , nameof(CompanyFieldOfActivity.ActivityName));
 
-            ViewData["CompanyFieldOfActivityId"] = new SelectList(_context.CompanyFieldOfActivities, "CompanyFieldOfActivityId", IsEnglish() ? "ActivityName" : "ActivityNameEst", company.CompanyFieldOfActivityId);
-            ViewData["CompanyTypeId"] = new SelectList(_context.CompanyTypes, "CompanyTypeId", IsEnglish() ? "CompanyTypeName" : "CompanyTypeNameEst", company.CompanyTypeId);
-            return View(company);
+            vm.CompanyTypesSelectList = new SelectList(_context.CompanyTypes
+                .Include(i => i.CompanyTypeName)
+                .ThenInclude(i => i.Translations)
+                , nameof(CompanyType.CompanyTypeId)
+                , nameof(CompanyType.CompanyTypeName));
+
+            //ViewData["CompanyFieldOfActivityId"] = new SelectList(_context.CompanyFieldOfActivities, "CompanyFieldOfActivityId", IsEnglish() ? "ActivityName" : "ActivityNameEst", company.CompanyFieldOfActivityId);
+            //ViewData["CompanyTypeId"] = new SelectList(_context.CompanyTypes, "CompanyTypeId", IsEnglish() ? "CompanyTypeName" : "CompanyTypeNameEst", company.CompanyTypeId);
+            return View(vm);
         }
 
         // GET: Companies/Edit/5
@@ -133,16 +169,28 @@ namespace WebApp.Areas.Users.Controllers
             {
                 return NotFound();
             }
-            ViewData["CompanyFieldOfActivityId"] = new SelectList(_context.CompanyFieldOfActivities, "CompanyFieldOfActivityId", IsEnglish() ? "ActivityName" : "ActivityNameEst", company.CompanyFieldOfActivityId);
-            ViewData["CompanyTypeId"] = new SelectList(_context.CompanyTypes, "CompanyTypeId", IsEnglish() ? "CompanyTypeName" : "CompanyTypeNameEst", company.CompanyTypeId);
-            return View(company);
+            var vm = new CompaniesCreateEditViewModel();
+            vm.Company = company;
+            vm.CompanyFieldOfActivitesSelectList = new SelectList(_context.CompanyFieldOfActivities
+                .Include(i => i.ActivityName)
+                .ThenInclude(i => i.Translations)
+                , nameof(CompanyFieldOfActivity.CompanyFieldOfActivityId)
+                , nameof(CompanyFieldOfActivity.ActivityName));
+
+            vm.CompanyTypesSelectList = new SelectList(_context.CompanyTypes
+                .Include(i => i.CompanyTypeName)
+                .ThenInclude(i => i.Translations)
+                , nameof(CompanyType.CompanyTypeId)
+                , nameof(CompanyType.CompanyTypeName));
+
+            return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CompanyId,CompanyName,CompanyRegistrationName,CompanyWebsite,CompanyTypeId,CompanyFieldOfActivityId")] Company company)
+        public async Task<IActionResult> Edit(int id, CompaniesCreateEditViewModel vm)
         {
-            if (id != company.CompanyId)
+            if (id != vm.Company.CompanyId)
             {
                 return NotFound();
             }
@@ -151,12 +199,12 @@ namespace WebApp.Areas.Users.Controllers
             {
                 try
                 {
-                    _context.Companies.Update(company);
+                    _context.Companies.Update(vm.Company);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CompanyExists(company.CompanyId))
+                    if (!CompanyExists(vm.Company.CompanyId))
                     {
                         return NotFound();
                     }
@@ -167,9 +215,19 @@ namespace WebApp.Areas.Users.Controllers
                 }
                 return RedirectToAction("Details", new { id });
             }
-            ViewData["CompanyFieldOfActivityId"] = new SelectList(_context.CompanyFieldOfActivities, "CompanyFieldOfActivityId", IsEnglish() ? "ActivityName" : "ActivityNameEst", company.CompanyFieldOfActivityId);
-            ViewData["CompanyTypeId"] = new SelectList(_context.CompanyTypes, "CompanyTypeId", IsEnglish() ? "CompanyTypeName" : "CompanyTypeNameEst", company.CompanyTypeId);
-            return View(company);
+            vm.CompanyFieldOfActivitesSelectList = new SelectList(_context.CompanyFieldOfActivities
+                      .Include(i => i.ActivityName)
+                      .ThenInclude(i => i.Translations)
+                      , nameof(CompanyFieldOfActivity.CompanyFieldOfActivityId)
+                      , nameof(CompanyFieldOfActivity.ActivityName));
+
+            vm.CompanyTypesSelectList = new SelectList(_context.CompanyTypes
+                .Include(i => i.CompanyTypeName)
+                .ThenInclude(i => i.Translations)
+                , nameof(CompanyType.CompanyTypeId)
+                , nameof(CompanyType.CompanyTypeName));
+
+            return View(vm);
         }
 
         [HttpPost]
@@ -266,17 +324,17 @@ namespace WebApp.Areas.Users.Controllers
             else return false;
         }
 
-        private bool IsEnglish()
-        {
-            if (Thread.CurrentThread.CurrentUICulture.Name.ToString() == "en-GB")
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        //private bool IsEnglish()
+        //{
+        //    if (Thread.CurrentThread.CurrentUICulture.Name.ToString() == "en-GB")
+        //    {
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+        //}
 
     }
 }

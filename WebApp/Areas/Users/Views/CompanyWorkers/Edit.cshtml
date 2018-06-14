@@ -1,4 +1,4 @@
-﻿@model Domain.CompanyWorker
+﻿@model WebApp.Areas.Users.Models.CompanyWorkerEditVM
 
 @{
     ViewData["Title"] = "Edit";
@@ -9,30 +9,30 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit" asp-route-fromProject="@ViewBag.fromProject">
+        <form asp-action="Edit" asp-route-fromProject="@Model.fromProject">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CompanyWorkerId" />
-            <input type="hidden" asp-for="CompanyId" />
+            <input type="hidden" asp-for="CompanyWorker.CompanyWorkerId" />
+            <input type="hidden" asp-for="CompanyWorker.CompanyId" />
 
             <div class="form-group">
-                <label asp-for="WorkerName" class="control-label"></label>
-                <input asp-for="WorkerName" class="form-control" />
-                <span asp-validation-for="WorkerName" class="text-danger"></span>
+                <label asp-for="CompanyWorker.WorkerName" class="control-label"></label>
+                <input asp-for="CompanyWorker.WorkerName" class="form-control" />
+                <span asp-validation-for="CompanyWorker.WorkerName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CompanyWorkerPosition" class="control-label"></label>
-                <select asp-for="CompanyWorkerPositionId" class="form-control" asp-items="ViewBag.CompanyWorkerPositionId"></select>
-                <span asp-validation-for="CompanyWorkerPositionId" class="text-danger"></span>
+                <label asp-for="CompanyWorker.CompanyWorkerPosition" class="control-label"></label>
+                <select asp-for="CompanyWorker.CompanyWorkerPositionId" class="form-control" asp-items="Model.WorkerPositionSelectList"></select>
+                <span asp-validation-for="CompanyWorker.CompanyWorkerPositionId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="WorkerPhone" class="control-label"></label>
-                <input asp-for="WorkerPhone" class="form-control" />
-                <span asp-validation-for="WorkerPhone" class="text-danger"></span>
+                <label asp-for="CompanyWorker.WorkerPhone" class="control-label"></label>
+                <input asp-for="CompanyWorker.WorkerPhone" class="form-control" />
+                <span asp-validation-for="CompanyWorker.WorkerPhone" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="WorkerEmail" class="control-label"></label>
-                <input asp-for="WorkerEmail" class="form-control" />
-                <span asp-validation-for="WorkerEmail" class="text-danger"></span>
+                <label asp-for="CompanyWorker.WorkerEmail" class="control-label"></label>
+                <input asp-for="CompanyWorker.WorkerEmail" class="form-control" />
+                <span asp-validation-for="CompanyWorker.WorkerEmail" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="@Resources.Shared.Save" class="btn btn-default" />
@@ -42,7 +42,7 @@
 </div>
 
 <div>
-    <a asp-action="Details" asp-controller="Companies" asp-route-id="@ViewBag.fromProject">@Resources.Shared.BackToCompany</a>
+    <a asp-action="Details" asp-controller="Companies" asp-route-id="@Model.fromProject">@Resources.Shared.BackToCompany</a>
 </div>
 
 @section Scripts {

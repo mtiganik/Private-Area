@@ -8,12 +8,12 @@
 
 <h2>@Resources.WebApp.Areas.Users.Companies.Index.IndexView</h2>
 
-@{bool isEnglish;
+@*@{bool isEnglish;
     if (Thread.CurrentThread.CurrentUICulture.Name.ToString() == "en-GB")
     {
         isEnglish = true;
     }
-    else { isEnglish = false; } }
+    else { isEnglish = false; } }*@
 
 
 <p>
@@ -54,10 +54,12 @@
                     @Html.DisplayFor(modelItem => item.CompanyWebsite)
                 </td>
                 <td>
-                    @(isEnglish ? Html.DisplayFor(modelItem => item.CompanyFieldOfActivity.ActivityName) : Html.DisplayFor(modelItem => item.CompanyFieldOfActivity.ActivityNameEst))
+                    @*@(isEnglish ? Html.DisplayFor(modelItem => item.CompanyFieldOfActivity.ActivityName) : Html.DisplayFor(modelItem => item.CompanyFieldOfActivity.ActivityNameEst))*@
+                    @Html.Raw(item.CompanyFieldOfActivity.ActivityName)
                 </td>
                 <td>
-                    @(isEnglish ? Html.DisplayFor(modelItem => item.CompanyType.CompanyTypeName) : Html.DisplayFor(modelItem => item.CompanyType.CompanyTypeNameEst))
+                    @*@(isEnglish ? Html.DisplayFor(modelItem => item.CompanyType.CompanyTypeName) : Html.DisplayFor(modelItem => item.CompanyType.CompanyTypeNameEst))*@
+               @Html.Raw(item.CompanyType.CompanyTypeName)
                 </td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.CompanyId">@Resources.Shared.Details</a> |

@@ -141,10 +141,7 @@
   <data name="NoConnectedCompanies" xml:space="preserve">
     <value>Sellesse projekti ei ole ühtegi firmat lisatud</value>
   </data>
-  <data name="ProjectNameEnglish" xml:space="preserve">
-    <value>Projekti nimi inglise keeles</value>
-  </data>
-  <data name="ProjectNameEst" xml:space="preserve">
-    <value>Projekti nimi eesti keeles</value>
+  <data name="ProjectName" xml:space="preserve">
+    <value>Projekti nimi</value>
   </data>
 </root>

@@ -8,12 +8,12 @@
     ViewData["Title"] = "Details";
 }
 
-@{bool isEnglish;
+@*@{bool isEnglish;
     if (Thread.CurrentThread.CurrentUICulture.Name.ToString() == "en-GB")
     {
         isEnglish = true;
     }
-    else { isEnglish = false; } }
+    else { isEnglish = false; } }*@
 
 <div>
     <h4>@Model.SelectedCompany.CompanyName</h4>
@@ -41,13 +41,13 @@
             @Resources.WebApp.Areas.Users.Companies.Details.FieldOfActivity
         </dt>
         <dd>
-            @(isEnglish ? Html.DisplayFor(model => model.SelectedCompany.CompanyFieldOfActivity.ActivityName) : Html.DisplayFor(model => model.SelectedCompany.CompanyFieldOfActivity.ActivityNameEst))
+          @Html.Raw(Model.SelectedCompany.CompanyFieldOfActivity.ActivityName)
         </dd>
         <dt>
             @Resources.WebApp.Areas.Users.Companies.Details.CompanyType
         </dt>
         <dd>
-            @(isEnglish ? Html.DisplayFor(model => model.SelectedCompany.CompanyType.CompanyTypeName) : Html.DisplayFor(model => model.SelectedCompany.CompanyType.CompanyTypeNameEst))
+            @Html.Raw(Model.SelectedCompany.CompanyType.CompanyTypeName)
         </dd>
     </dl>
     <a asp-action="Edit" asp-route-id="@Model.SelectedCompany.CompanyId">@Resources.Shared.Edit</a> 
@@ -91,7 +91,8 @@
                             @Html.DisplayFor(modelItem => item.WorkerEmail)
                         </td>
                         <td>
-                            @(isEnglish ? Html.DisplayFor(modelItem => item.CompanyWorkerPosition.PositionName) : Html.DisplayFor(modelItem => item.CompanyWorkerPosition.PositionNameEst))
+                            @Html.Raw(item.CompanyWorkerPosition.PositionName)
+                            @*@(isEnglish ? Html.DisplayFor(modelItem => item.CompanyWorkerPosition.PositionName) : Html.DisplayFor(modelItem => item.CompanyWorkerPosition.PositionNameEst))*@
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.EntryAdded)
@@ -184,10 +185,11 @@
                             @Html.DisplayFor(modelItem => item.ApplicationUser.FullName)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.CompanyWorker.WorkerName) (@(isEnglish ? Html.DisplayFor(modelItem => item.ContactType.ContactTypeName) : Html.DisplayFor(modelItem => item.ContactType.ContactTypeNameEst)))
+
+                            @Html.DisplayFor(modelItem => item.CompanyWorker.WorkerName) (@Html.Raw(item.ContactType.ContactTypeName) )
                         </td>
                         <td>
-                            @(isEnglish ? Html.DisplayFor(modelItem => item.Project.ProjectName) : Html.DisplayFor(modelItem => item.Project.ProjectNameEst))
+                            @Html.DisplayFor(modelItem => item.Project.ProjectName)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.ContactDate)

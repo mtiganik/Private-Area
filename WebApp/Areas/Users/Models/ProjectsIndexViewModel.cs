@@ -14,5 +14,7 @@ namespace WebApp.Areas.Users.Models
         public IEnumerable<Project> Projects { get; set; }
 
         public IEnumerable<Position> Positions { get; set; }
+
+        public int ProjectsId { get; set; }
     }
 }

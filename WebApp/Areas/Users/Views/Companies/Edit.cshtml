@@ -1,4 +1,4 @@
-﻿@model Domain.Company
+﻿@model WebApp.Areas.Users.Models.CompaniesCreateEditViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -6,38 +6,15 @@
 
 <h2>@Resources.WebApp.Areas.Users.Companies.Edit.EditCompany</h2>
 
-<h4>@Resources.WebApp.Areas.Users.Companies.Edit.Company @Model.CompanyName</h4>
+<h4>@Resources.WebApp.Areas.Users.Companies.Edit.Company @Model.Company.CompanyName</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CompanyId" />
-            <div class="form-group">
-                <label asp-for="CompanyName" class="control-label"></label>
-                <input asp-for="CompanyName" class="form-control" />
-                <span asp-validation-for="CompanyName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CompanyRegistrationName" class="control-label"></label>
-                <input asp-for="CompanyRegistrationName" class="form-control" />
-                <span asp-validation-for="CompanyRegistrationName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CompanyWebsite" class="control-label"></label>
-                <input asp-for="CompanyWebsite" class="form-control" />
-                <span asp-validation-for="CompanyWebsite" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CompanyType" class="control-label"></label>
-                <select asp-for="CompanyTypeId" class="form-control" asp-items="ViewBag.CompanyTypeId"></select>
-                <span asp-validation-for="CompanyTypeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CompanyFieldOfActivity" class="control-label"></label>
-                <select asp-for="CompanyFieldOfActivityId" class="form-control" asp-items="ViewBag.CompanyFieldOfActivityId"></select>
-                <span asp-validation-for="CompanyFieldOfActivityId" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="Company.CompanyId" />
+
+            @Html.Partial("_CreateEdit")
             <div class="form-group">
                 <input type="submit" value="@Resources.WebApp.Areas.Users.Companies.Edit.Save" class="btn btn-default" />
             </div>
@@ -46,7 +23,7 @@
 </div>
 
 <div>
-    <a asp-action="Details" asp-route-id="@Model.CompanyId">@Resources.WebApp.Areas.Users.Companies.Edit.Back</a>
+    <a asp-action="Details" asp-route-id="@Model.Company.CompanyId">@Resources.WebApp.Areas.Users.Companies.Edit.Back</a>
 </div>
 
 @section Scripts {

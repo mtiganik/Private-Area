@@ -31,14 +31,22 @@ namespace WebApp.Areas.Users.Controllers
             vm.ApplicationUsers = _context.ApplicationUser
                 .Include(i => i.Positions)
                 .Include(i => i.Department)
-                .Include(i => i.UserStatus);
+                    .ThenInclude(i => i.DepartmentName)
+                        .ThenInclude(i => i.Translations)
+                .Include(i => i.UserStatus)
+                    .ThenInclude(i => i.UserStatusName)
+                        .ThenInclude(i => i.Translations);
 
             if (user != null)
             {
                 vm.Positions = await _context.Positions.Where(u => u.ApplicationUser.UserName == user)
                     .Include(i => i.Project)
                         .ThenInclude(i => i.ProjectType)
+                            .ThenInclude(i => i.ProjectTypeComments)
+                                .ThenInclude(i => i.Translations)
                     .Include(i => i.PositionName)
+                        .ThenInclude(i => i.PositionNameName)
+                            .ThenInclude(i => i.Translations)
                     .Include(i => i.ApplicationUser)
                     .OrderByDescending(i => i.Project.ProjectStartDate)
                     .AsNoTracking()
@@ -46,7 +54,8 @@ namespace WebApp.Areas.Users.Controllers
 
                 vm.SelectedApplicationUser = await _context.ApplicationUser.Where(i => i.UserName == user).SingleOrDefaultAsync();
 
-                ViewData["UserName"] = user;
+                vm.UserName = user;
+                //ViewData["UserName"] = user;
 
             }
 
@@ -63,7 +72,11 @@ namespace WebApp.Areas.Users.Controllers
 
             var applicationUser = await _context.ApplicationUser
                 .Include(a => a.Department)
+                    .ThenInclude(i => i.DepartmentName)
+                        .ThenInclude(i => i.Translations)
                 .Include(a => a.UserStatus)
+                    .ThenInclude(i => i.UserStatusName)
+                        .ThenInclude(i => i.Translations)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (applicationUser == null)
             {
@@ -74,18 +87,6 @@ namespace WebApp.Areas.Users.Controllers
         }
 
         
-        private bool IsEnglish()
-        {
-            if(Thread.CurrentThread.CurrentUICulture.Name.ToString() == "en-GB")
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         // GET: ApplicationUsers/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
@@ -93,22 +94,20 @@ namespace WebApp.Areas.Users.Controllers
             {
                 return NotFound();
             }
-            var vm = new UserEditViewModel();
+            var vm = new UsersEditVM();
             vm.ApplicationUser = await _context.ApplicationUser.Where(u => u.Id == id).SingleOrDefaultAsync();
 
-            //var applicationUser = await _context.ApplicationUser.SingleOrDefaultAsync(m => m.Id == id);
             if (vm.ApplicationUser == null)
             {
                 return NotFound();
             }
-            vm.DepartmentSelectList =  new SelectList(_context.Departments, "DepartmentId", IsEnglish() ? "DepartmentName" : "DepartmentNameEst", vm.ApplicationUser.DepartmentId);
+            vm.DepartmentSelectList =  new SelectList(_context.Departments.Include(t => t.DepartmentName).ThenInclude(t => t.Translations), nameof(Department.DepartmentId), nameof(Department.DepartmentName), vm.ApplicationUser.DepartmentId);
             return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(string id, [Bind("FirstName,LastName,Address,Skype,Comments,UserStatusId,DepartmentId,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] ApplicationUser applicationUser)
-        public async Task<IActionResult> Edit(string id, UserEditViewModel vm)
+        public async Task<IActionResult> Edit(string id, UsersEditVM vm)
         {
             if (id != vm.ApplicationUser.Id 
                 || _context.ApplicationUser.Where(u=> u.Id == id).Select(u=> u.UserStatusId).Single() 
@@ -121,7 +120,6 @@ namespace WebApp.Areas.Users.Controllers
             {
                 try
                 {
-                    //vm.ApplicationUser.UserName = vm.ApplicationUser.Email;
                     _context.Update(vm.ApplicationUser);
                     await _context.SaveChangesAsync();
                 }
@@ -138,7 +136,7 @@ namespace WebApp.Areas.Users.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            vm.DepartmentSelectList = new SelectList(_context.Departments, "DepartmentId", IsEnglish() ? "DepartmentName" : "DepartmentNameEst", vm.ApplicationUser.DepartmentId);
+            vm.DepartmentSelectList = new SelectList(_context.Departments.Include(t => t.DepartmentName).ThenInclude(t => t.Translations), nameof(Department.DepartmentId), nameof(Department.DepartmentName), vm.ApplicationUser.DepartmentId);
             return View(vm);
         }
         

@@ -9,6 +9,7 @@ using DAL.App.EF;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using WebApp.Areas.Admin.Models;
+using DAL.App.Interfaces;
 
 namespace WebApp.Areas.Admin.Controllers
 {
@@ -16,18 +17,20 @@ namespace WebApp.Areas.Admin.Controllers
     [Area("Admin")]
     public class CompanyFieldOfActivitiesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public CompanyFieldOfActivitiesController(ApplicationDbContext context)
+        public CompanyFieldOfActivitiesController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: CompanyFieldOfActivities
         public async Task<IActionResult> Index()
         {
-            var res = _context.CompanyFieldOfActivities.Include(i => i.ActivityName).ThenInclude(i => i.Translations);
-            return View(await res.ToListAsync());
+            // var res = _context.CompanyFieldOfActivities.Include(i => i.ActivityName).ThenInclude(i => i.Translations);
+            // return View(await res.ToListAsync());
+            return View(await _uow.CompanyFieldOfActivities.AllAsync());
         }
 
         // GET: CompanyFieldOfActivities/Details/5
@@ -38,10 +41,11 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var companyFieldOfActivity = await _context.CompanyFieldOfActivities
-                .Include(i => i.ActivityName)
-                    .ThenInclude( i => i.Translations)
-                .SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
+            //var companyFieldOfActivity = await _context.CompanyFieldOfActivities
+            //    .Include(i => i.ActivityName)
+            //        .ThenInclude( i => i.Translations)
+            //    .SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
+            var companyFieldOfActivity = await _uow.CompanyFieldOfActivities.GetSingle(id.Value);
             if (companyFieldOfActivity == null)
             {
                 return NotFound();
@@ -64,8 +68,8 @@ namespace WebApp.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 vm.CompanyFieldOfActivity.ActivityName = new MultiLangString(vm.ActivityName);
-                _context.Add(vm.CompanyFieldOfActivity);
-                await _context.SaveChangesAsync();
+                await _uow.CompanyFieldOfActivities.AddAsync(vm.CompanyFieldOfActivity);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(vm);
@@ -79,10 +83,11 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var companyFieldOfActivity = await _context.CompanyFieldOfActivities
-                .Include(i => i.ActivityName)
-                    .ThenInclude(i => i.Translations)
-                .SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
+            var companyFieldOfActivity = await _uow.CompanyFieldOfActivities.GetSingle(id.Value);
+                //_context.CompanyFieldOfActivities
+                //.Include(i => i.ActivityName)
+                //    .ThenInclude(i => i.Translations)
+                //.SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
             if (companyFieldOfActivity == null)
             {
                 return NotFound();
@@ -108,20 +113,21 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 try
                 {
-                  vm.CompanyFieldOfActivity.ActivityName =
-                        _context.MultiLangStrings
-                            .Include(t => t.Translations)
-                            .FirstOrDefault(m =>
-                            m.MultiLangStringId == vm.CompanyFieldOfActivity.ActivityNameId) ?? new MultiLangString();
+                    vm.CompanyFieldOfActivity.ActivityName = await _uow.MultiLangStrings.FindSingleAsync(vm.CompanyFieldOfActivity.ActivityNameId)
+                        ?? new MultiLangString();
+                        //_context.MultiLangStrings
+                        //    .Include(t => t.Translations)
+                        //    .FirstOrDefault(m =>
+                        //    m.MultiLangStringId == vm.CompanyFieldOfActivity.ActivityNameId) ?? new MultiLangString();
                     vm.CompanyFieldOfActivity.ActivityName.SetTranslation(vm.ActivityName);
 
 
-                    _context.Update(vm.CompanyFieldOfActivity);
-                    await _context.SaveChangesAsync();
+                    _uow.CompanyFieldOfActivities.Update(vm.CompanyFieldOfActivity);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CompanyFieldOfActivityExists(vm.CompanyFieldOfActivity.CompanyFieldOfActivityId))
+                    if (!(await _uow.CompanyFieldOfActivities.ExistsByPrimaryKeyAsync(vm.CompanyFieldOfActivity.CompanyFieldOfActivityId)))
                     {
                         return NotFound();
                     }
@@ -143,9 +149,10 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var companyFieldOfActivity = await _context.CompanyFieldOfActivities.Include(i => i.ActivityName)
-                .ThenInclude(i => i.Translations)
-                .SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
+            var companyFieldOfActivity = await _uow.CompanyFieldOfActivities.GetSingle(id.Value);
+                //Include(i => i.ActivityName)
+                //.ThenInclude(i => i.Translations)
+                //.SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
             if (companyFieldOfActivity == null)
             {
                 return NotFound();
@@ -159,17 +166,20 @@ namespace WebApp.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var companyFieldOfActivity = await _context.CompanyFieldOfActivities.Include(t => t.ActivityName)
-                .ThenInclude(t => t.Translations)
-                .SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
-            _context.CompanyFieldOfActivities.Remove(companyFieldOfActivity);
-            await _context.SaveChangesAsync();
+            var companyFieldOfActivity = await _uow.CompanyFieldOfActivities.GetSingle(id);
+            _uow.CompanyFieldOfActivities.Remove(companyFieldOfActivity);
+            await _uow.SaveChangesAsync();
+            //    _context.CompanyFieldOfActivities.Include(t => t.ActivityName)
+            //    .ThenInclude(t => t.Translations)
+            //    .SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
+            //_context.CompanyFieldOfActivities.Remove(companyFieldOfActivity);
+            //await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CompanyFieldOfActivityExists(int id)
-        {
-            return _context.CompanyFieldOfActivities.Any(e => e.CompanyFieldOfActivityId == id);
-        }
+        //private bool CompanyFieldOfActivityExists(int id)
+        //{
+        //    return _context.CompanyFieldOfActivities.Any(e => e.CompanyFieldOfActivityId == id);
+        //}
     }
 }

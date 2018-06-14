@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace WebApp.Areas.Users.Models
 {
-    public class UserEditViewModel
+    public class CompanyWorkerEditVM
     {
-        public ApplicationUser ApplicationUser { get; set; }
+        public CompanyWorker CompanyWorker { get; set; }
 
-        public SelectList DepartmentSelectList { get; set; }
+        public SelectList WorkerPositionSelectList { get; set; }
+
+        public int? fromProject { get; set; }
     }
 }

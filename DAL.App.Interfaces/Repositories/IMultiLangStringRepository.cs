@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace DAL.App.Interfaces.Repositories
 {
-    public interface ICompanyFieldOfActivityRepository : IRepository<CompanyFieldOfActivity>
+    public interface IMultiLangStringRepository : IRepository<MultiLangString>
     {
-        Task<CompanyFieldOfActivity> GetSingle(int id);
-
-        Task<bool> ExistsByPrimaryKeyAsync(int keyValue);
+        Task<MultiLangString> FindSingleAsync(int id);
     }
 }

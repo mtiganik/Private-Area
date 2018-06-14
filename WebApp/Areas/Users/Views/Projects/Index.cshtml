@@ -10,13 +10,6 @@
 
 <h2>@Resources.WebApp.Areas.Users.Projects.Index.Title</h2>
 
-@{bool isEnglish;
-    if (Thread.CurrentThread.CurrentUICulture.Name.ToString() == "en-GB")
-    {
-        isEnglish = true;
-    }
-    else { isEnglish = false; } }
-
 
 <table class="table">
     <thead>
@@ -45,14 +38,14 @@
         {
             string SelectedRow = "";
             bool IsUserMarketer = false;
-            if (item.ProjectId.Equals(ViewData["UserName"]))
+            if (item.ProjectId.Equals(Model.ProjectsId))
             {
                 SelectedRow = "success";
             }
 
             <tr class="@SelectedRow">
                 <td>
-                    @(isEnglish ? Html.DisplayFor(modelItem => item.ProjectName) : @Html.DisplayFor(modelItem => item.ProjectNameEst))
+                    @Html.DisplayFor(modelItem => item.ProjectName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ProjectStartDate)
@@ -80,7 +73,7 @@
                 </td>
 
                 <td>
-                    @(isEnglish ? Html.DisplayFor(modelItem => item.ProjectType.ProjectTypeName) : Html.DisplayFor(modelItem => item.ProjectType.ProjectTypeNameEst))
+                    @Html.DisplayFor(modelItem => item.ProjectType.ProjectTypeName)
                 </td>
                 <td>
                     <a asp-action="Index" asp-route-id="@item.ProjectId"> @Resources.Shared.Select </a> |
@@ -112,7 +105,7 @@
         {
             <tr>
                 <td>
-                    @(isEnglish ? item.PositionName.PositionNameEng : item.PositionName.PositionNameEst )
+                    @item.PositionName.PositionNameName
                 </td>
 
                 <td>

@@ -8,12 +8,6 @@
     ViewData["Title"] = "Index";
 }
 
-@{bool isEnglish;
-    if (Thread.CurrentThread.CurrentUICulture.Name.ToString() == "en-GB")
-    {
-        isEnglish = true;
-    }
-    else { isEnglish = false; } }
 <h2>@Resources.WebApp.Areas.Users.Users.Index.Title</h2>
 
 <table class="table">
@@ -57,7 +51,7 @@
                 UserRow = "bg-info";
                 showEdit = true;
             }
-            if (item.UserName.Equals(ViewData["UserName"]))
+            if (item.UserName.Equals(Model.UserName))
             {
                 selectedRow = "success";
 
@@ -81,25 +75,12 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Email)
                 </td>
-                @if (isEnglish)
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Department.DepartmentName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UserStatus.UserStatusName)
-                    </td>
-                }
-                else
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Department.DepartmentNameEst)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UserStatus.UserStatusNameEst)
-                    </td>
-                }
-
+                <td>
+                    @Html.Raw(item.Department.DepartmentName)
+                </td>
+                <td>
+                    @Html.Raw(item.UserStatus.UserStatusName)
+                </td>
                 <td>
                     @if (showEdit)
                     {
@@ -135,11 +116,9 @@
         </tr>
         @foreach (var item in Model.Positions)
         {
-            if (isEnglish)
-            {
                 <tr>
                     <td>
-                        @item.Project.ProjectName
+                        @Html.Raw(item.Project.ProjectName)
 
                     </td>
                     <td>
@@ -147,44 +126,17 @@
 
                     </td>
                     <td>
-                        @item.Project.ProjectType.ProjectTypeComments
+                        @Html.Raw(item.Project.ProjectType.ProjectTypeComments)
                     </td>
                     <td>
                         @item.ApplicationUser.FullName
                     </td>
 
                     <td>
-                        @item.PositionName.PositionNameEng
+                        @Html.Raw(item.PositionName.PositionNameName)
                     </td>
 
                 </tr>
-            }
-            else
-            {
-                <tr>
-                    <td>
-                        @item.Project.ProjectNameEst
-
-                    </td>
-                    <td>
-                        @item.Project.ProjectStartDate.ToShortDateString()
-
-                    </td>
-                    <td>
-                        @item.Project.ProjectType.ProjectTypeCommentsEst
-                    </td>
-                    <td>
-                        @item.ApplicationUser.FullName
-                    </td>
-
-                    <td>
-                        @item.PositionName.PositionNameEst
-                    </td>
-
-                </tr>
-
-
-            }
         }
 
     </table>

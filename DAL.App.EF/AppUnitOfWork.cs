@@ -28,63 +28,69 @@ namespace DAL.App.EF
 
             _repositoryProvider = repositoryProvider;
         }
-        
+
         // You could do it like this aswell:
-        //public ICompanyFieldOfActivityRepository CompanyFieldOfActivities =>
-        //    GetCustomRepository<ICompanyFieldOfActivityRepository>();
+        //public IRepository<CompanyFieldOfActivity> CompanyFieldOfActivities =>
+        //    GetEntityRepository<CompanyFieldOfActivity>();
 
-        public IRepository<CompanyFieldOfActivity> CompanyFieldOfActivities =>
-            GetEntityRepository<CompanyFieldOfActivity>();
+        public ICompanyFieldOfActivityRepository CompanyFieldOfActivities =>
+            GetCustomRepository<ICompanyFieldOfActivityRepository>();
 
-        public IRepository<ApplicationUser> ApplicationUsers =>
-            GetEntityRepository<ApplicationUser>();
+        public IApplicationUserRepository ApplicationUsers =>
+            GetCustomRepository<IApplicationUserRepository>();
 
-        public IRepository<Company> Companies =>
-            GetEntityRepository<Company>();
-
-
-        public IRepository<CompanyType> CompanyTypes =>
-            GetEntityRepository<CompanyType>();
+        public ICompanyRepository Companies =>
+            GetCustomRepository<ICompanyRepository>();
 
 
-        public IRepository<CompanyWorker> CompanyWorkers =>
-            GetEntityRepository<CompanyWorker>();
+        public ICompanyTypeRepository CompanyTypes =>
+            GetCustomRepository<ICompanyTypeRepository>();
 
 
-        public IRepository<CompanyWorkerPosition> CompanyWorkerPositions =>
-            GetEntityRepository<CompanyWorkerPosition>();
+        public ICompanyWorkerRepository CompanyWorkers =>
+            GetCustomRepository<ICompanyWorkerRepository>();
 
 
-        public IRepository<Contact> Contacts =>
-            GetEntityRepository<Contact>();
+        public ICompanyWorkerPositionRepository CompanyWorkerPositions =>
+            GetCustomRepository<ICompanyWorkerPositionRepository>();
 
 
-        public IRepository<ContactType> ContactTypes =>
-            GetEntityRepository<ContactType>();
+        public IContactRepository Contacts =>
+            GetCustomRepository<IContactRepository>();
 
 
-        public IRepository<Position> Positions =>
-            GetEntityRepository<Position>();
+        public IContactTypeRepository ContactTypes =>
+            GetCustomRepository<IContactTypeRepository>();
+
+        public IMultiLangStringRepository MultiLangStrings =>
+             GetCustomRepository<IMultiLangStringRepository>();
 
 
-        public IRepository<PositionName> PositionNames =>
-            GetEntityRepository<PositionName>();
+
+        public IPositionRepository Positions =>
+            GetCustomRepository<IPositionRepository>();
 
 
-        public IRepository<Project> Projects =>
-            GetEntityRepository<Project>();
+        public IPositionNameRepository PositionNames =>
+            GetCustomRepository<IPositionNameRepository>();
 
 
-        public IRepository<ProjectType> ProjectTypes =>
-            GetEntityRepository<ProjectType>();
+        public IProjectRepository Projects =>
+            GetCustomRepository<IProjectRepository>();
 
 
-        public IRepository<Department> Departments =>
-            GetEntityRepository<Department>();
+        public IProjectTypeRepository ProjectTypes =>
+            GetCustomRepository<IProjectTypeRepository>();
+
+        public ITranslationRepository Translations =>
+            GetCustomRepository<ITranslationRepository>();
+
+        public IDepartmentRepository Departments =>
+            GetCustomRepository<IDepartmentRepository>();
 
 
-        public IRepository<UserStatus> UserStatuses =>
-            GetEntityRepository<UserStatus>();
+        public IUserStatusRepository UserStatuses =>
+            GetCustomRepository<IUserStatusRepository>();
 
 
 

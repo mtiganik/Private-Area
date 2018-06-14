@@ -133,20 +133,11 @@ namespace Resources.WebApp.Areas.Users.Projects {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Project name in English.
+        ///   Looks up a localized string similar to Project name.
         /// </summary>
-        public static string ProjectNameEnglish {
+        public static string ProjectName {
             get {
-                return ResourceManager.GetString("ProjectNameEnglish", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Project name in Estonian.
-        /// </summary>
-        public static string ProjectNameEst {
-            get {
-                return ResourceManager.GetString("ProjectNameEst", resourceCulture);
+                return ResourceManager.GetString("ProjectName", resourceCulture);
             }
         }
     }

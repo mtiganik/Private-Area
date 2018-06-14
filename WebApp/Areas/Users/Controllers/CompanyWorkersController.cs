@@ -9,6 +9,7 @@ using DAL.App.EF;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading;
+using WebApp.Areas.Users.Models;
 
 namespace WebApp.Areas.Users.Controllers
 {
@@ -31,26 +32,30 @@ namespace WebApp.Areas.Users.Controllers
             {
                 return NotFound();
             }
-            if(fromProject != null)
-            {
-                ViewBag.fromProject = fromProject;
-            }
             var companyWorker = await _context.CompanyWorkers.SingleOrDefaultAsync(m => m.CompanyWorkerId == id);
             if (companyWorker == null)
             {
                 return NotFound();
             }
-            ViewData["CompanyWorkerPositionId"] = new SelectList(_context.CompanyWorkerPositions, "CompanyWorkerPositionId",IsEnglish() ? "PositionName" : "PositionNameEst", companyWorker.CompanyWorkerPositionId);
+
+            var vm = new CompanyWorkerEditVM();
+            vm.CompanyWorker = companyWorker;
+
+            if(fromProject != null)
+            {
+                vm.fromProject = fromProject;
+            }
+            vm.WorkerPositionSelectList = new SelectList(_context.CompanyWorkerPositions.Include(i => i.PositionName).ThenInclude(t => t.Translations), nameof(CompanyWorkerPosition.CompanyWorkerPositionId), nameof(CompanyWorkerPosition.PositionName), companyWorker.CompanyWorkerPositionId);
 
             //ViewData["CompanyWorkerPositionId"] = new SelectList(_context.CompanyWorkerPositions, "CompanyWorkerPositionId", "CompanyWorkerPositionId", companyWorker.CompanyWorkerPositionId);
-            return View(companyWorker);
+            return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, int? fromProject, [Bind("CompanyWorkerId,WorkerName,CompanyWorkerPositionId,WorkerPhone,WorkerEmail,EntryAdded,CompanyId")] CompanyWorker companyWorker)
+        public async Task<IActionResult> Edit(int id, int? fromProject, CompanyWorkerEditVM vm)
         {
-            if (id != companyWorker.CompanyWorkerId)
+            if (id != vm.CompanyWorker.CompanyWorkerId)
             {
                 return NotFound();
             }
@@ -59,13 +64,13 @@ namespace WebApp.Areas.Users.Controllers
             {
                 try
                 {
-                    companyWorker.EntryAdded = DateTime.Now;
-                    _context.Update(companyWorker);
+                    vm.CompanyWorker.EntryAdded = DateTime.Now;
+                    _context.Update(vm.CompanyWorker);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CompanyWorkerExists(companyWorker.CompanyWorkerId))
+                    if (!CompanyWorkerExists(vm.CompanyWorker.CompanyWorkerId))
                     {
                         return NotFound();
                     }
@@ -81,8 +86,8 @@ namespace WebApp.Areas.Users.Controllers
 
                 return RedirectToAction("Index","Companies");
             }
-            ViewData["CompanyWorkerPositionId"] = new SelectList(_context.CompanyWorkerPositions, "CompanyWorkerPositionId", "CompanyWorkerPositionId", companyWorker.CompanyWorkerPositionId);
-            return View(companyWorker);
+            vm.WorkerPositionSelectList = new SelectList(_context.CompanyWorkerPositions.Include(i => i.PositionName).ThenInclude(t => t.Translations), nameof(CompanyWorkerPosition.CompanyWorkerPositionId), nameof(CompanyWorkerPosition.PositionName), vm.CompanyWorker.CompanyWorkerPositionId);
+            return View(vm);
         }
 
         // GET: CompanyWorkers/Delete/5
@@ -129,17 +134,6 @@ namespace WebApp.Areas.Users.Controllers
             return _context.CompanyWorkers.Any(e => e.CompanyWorkerId == id);
         }
 
-        private bool IsEnglish()
-        {
-            if (Thread.CurrentThread.CurrentUICulture.Name.ToString() == "en-GB")
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
 
     }
 }

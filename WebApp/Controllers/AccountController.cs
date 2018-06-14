@@ -7,6 +7,7 @@ using DAL.App.EF;
 using Domain;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -217,8 +218,11 @@ namespace WebApp.Controllers
         public IActionResult Register(string returnUrl = null)
         {
             var vm = new RegisterViewModel();
-           vm.DepartmentSelectList = new SelectList(_context.Departments.OrderByDescending(a => a.DepartmentName), "DepartmentId", "DepartmentName");
-            ViewData["ReturnUrl"] = returnUrl;
+           //vm.DepartmentSelectList = new SelectList(_context.Departments.OrderByDescending(a => a.DepartmentName), "DepartmentId", "DepartmentName");
+            vm.DepartmentSelectList = new SelectList(_context.Departments.Include(t => t.DepartmentName).ThenInclude(t => t.Translations), nameof(Department.DepartmentId), nameof(Department.DepartmentName));
+
+            vm.returnUrl = returnUrl;
+            //ViewData["ReturnUrl"] = returnUrl;
             return View(vm);
         }
 
