@@ -17,7 +17,6 @@ namespace WebApp.Areas.Admin.Controllers
     [Area("Admin")]
     public class CompanyFieldOfActivitiesController : Controller
     {
-        //private readonly ApplicationDbContext _context;
         private readonly IAppUnitOfWork _uow;
 
         public CompanyFieldOfActivitiesController(IAppUnitOfWork uow)
@@ -28,8 +27,6 @@ namespace WebApp.Areas.Admin.Controllers
         // GET: CompanyFieldOfActivities
         public async Task<IActionResult> Index()
         {
-            // var res = _context.CompanyFieldOfActivities.Include(i => i.ActivityName).ThenInclude(i => i.Translations);
-            // return View(await res.ToListAsync());
             return View(await _uow.CompanyFieldOfActivities.AllAsync());
         }
 
@@ -41,10 +38,6 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            //var companyFieldOfActivity = await _context.CompanyFieldOfActivities
-            //    .Include(i => i.ActivityName)
-            //        .ThenInclude( i => i.Translations)
-            //    .SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
             var companyFieldOfActivity = await _uow.CompanyFieldOfActivities.GetSingle(id.Value);
             if (companyFieldOfActivity == null)
             {
@@ -84,10 +77,6 @@ namespace WebApp.Areas.Admin.Controllers
             }
 
             var companyFieldOfActivity = await _uow.CompanyFieldOfActivities.GetSingle(id.Value);
-                //_context.CompanyFieldOfActivities
-                //.Include(i => i.ActivityName)
-                //    .ThenInclude(i => i.Translations)
-                //.SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
             if (companyFieldOfActivity == null)
             {
                 return NotFound();
@@ -115,10 +104,6 @@ namespace WebApp.Areas.Admin.Controllers
                 {
                     vm.CompanyFieldOfActivity.ActivityName = await _uow.MultiLangStrings.FindSingleAsync(vm.CompanyFieldOfActivity.ActivityNameId)
                         ?? new MultiLangString();
-                        //_context.MultiLangStrings
-                        //    .Include(t => t.Translations)
-                        //    .FirstOrDefault(m =>
-                        //    m.MultiLangStringId == vm.CompanyFieldOfActivity.ActivityNameId) ?? new MultiLangString();
                     vm.CompanyFieldOfActivity.ActivityName.SetTranslation(vm.ActivityName);
 
 
@@ -150,9 +135,6 @@ namespace WebApp.Areas.Admin.Controllers
             }
 
             var companyFieldOfActivity = await _uow.CompanyFieldOfActivities.GetSingle(id.Value);
-                //Include(i => i.ActivityName)
-                //.ThenInclude(i => i.Translations)
-                //.SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
             if (companyFieldOfActivity == null)
             {
                 return NotFound();
@@ -169,17 +151,8 @@ namespace WebApp.Areas.Admin.Controllers
             var companyFieldOfActivity = await _uow.CompanyFieldOfActivities.GetSingle(id);
             _uow.CompanyFieldOfActivities.Remove(companyFieldOfActivity);
             await _uow.SaveChangesAsync();
-            //    _context.CompanyFieldOfActivities.Include(t => t.ActivityName)
-            //    .ThenInclude(t => t.Translations)
-            //    .SingleOrDefaultAsync(m => m.CompanyFieldOfActivityId == id);
-            //_context.CompanyFieldOfActivities.Remove(companyFieldOfActivity);
-            //await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        //private bool CompanyFieldOfActivityExists(int id)
-        //{
-        //    return _context.CompanyFieldOfActivities.Any(e => e.CompanyFieldOfActivityId == id);
-        //}
     }
 }

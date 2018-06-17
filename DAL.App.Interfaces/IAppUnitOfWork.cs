@@ -29,6 +29,7 @@ namespace DAL.App.Interfaces
 
         IApplicationUserRepository ApplicationUsers { get; }
         ICompanyRepository Companies { get; }
+        ICompanyProjectRepository CompanyProjects { get; }
         ICompanyFieldOfActivityRepository CompanyFieldOfActivities { get; }
         ICompanyTypeRepository CompanyTypes { get; }
         ICompanyWorkerRepository CompanyWorkers { get; }

@@ -42,6 +42,9 @@ namespace DAL.App.EF
         public ICompanyRepository Companies =>
             GetCustomRepository<ICompanyRepository>();
 
+        public ICompanyProjectRepository CompanyProjects =>
+            GetCustomRepository<ICompanyProjectRepository>();
+
 
         public ICompanyTypeRepository CompanyTypes =>
             GetCustomRepository<ICompanyTypeRepository>();

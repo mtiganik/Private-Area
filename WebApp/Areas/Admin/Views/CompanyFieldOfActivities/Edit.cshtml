@@ -13,6 +13,8 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="CompanyFieldOfActivity.CompanyFieldOfActivityId" />
+            <input type="hidden" asp-for="CompanyFieldOfActivity.ActivityNameId" />
+
 
             @Html.Partial("_CreateEdit")
 

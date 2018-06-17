@@ -42,9 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Areas\Admin\Views\ApplicationUsers\Create.cshtml">
-      <Pack>$(IncludeRazorContentInPack)</Pack>
-    </Content>
     <Content Update="Areas\Admin\Views\ApplicationUsers\Delete.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>

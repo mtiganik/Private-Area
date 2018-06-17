@@ -11,7 +11,7 @@ using System;
 namespace DAL.App.EF.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180609205344_Initial")]
+    [Migration("20180617143435_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

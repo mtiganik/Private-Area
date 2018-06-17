@@ -9,6 +9,7 @@ using DAL.App.EF;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using WebApp.Areas.Admin.Models;
+using DAL.App.Interfaces;
 
 namespace WebApp.Areas.Admin.Controllers
 {
@@ -16,20 +17,23 @@ namespace WebApp.Areas.Admin.Controllers
     [Area("Admin")]
     public class CompanyTypesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public CompanyTypesController(ApplicationDbContext context)
+        public CompanyTypesController( IAppUnitOfWork uow)
         {
-            _context = context;
+            
+            _uow = uow;
         }
 
         // GET: CompanyTypes
         public async Task<IActionResult> Index()
         {
-            var res = _context.CompanyTypes
-                .Include(t => t.CompanyTypeName)
-                    .ThenInclude(t => t.Translations);
-            return View(await res.ToListAsync());
+            //var res = 
+            //    _context.CompanyTypes
+            //    .Include(t => t.CompanyTypeName)
+            //        .ThenInclude(t => t.Translations);
+            return View(await _uow.CompanyTypes.AllAsync());
         }
 
         // GET: CompanyTypes/Details/5
@@ -40,10 +44,11 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var companyType = await _context.CompanyTypes
-                .Include(t => t.CompanyTypeName)
-                    .ThenInclude(t => t.Translations)
-                .SingleOrDefaultAsync(m => m.CompanyTypeId == id);
+            var companyType = await _uow.CompanyTypes.GetSingle(id.Value);
+                //_context.CompanyTypes
+                //.Include(t => t.CompanyTypeName)
+                //    .ThenInclude(t => t.Translations)
+                //.SingleOrDefaultAsync(m => m.CompanyTypeId == id);
             if (companyType == null)
             {
                 return NotFound();
@@ -66,8 +71,8 @@ namespace WebApp.Areas.Admin.Controllers
             if (ModelState.IsValid)
             {
                 vm.CompanyType.CompanyTypeName = new MultiLangString(vm.CompanyTypeName);
-                _context.Add(vm.CompanyType);
-                await _context.SaveChangesAsync();
+                _uow.CompanyTypes.Add(vm.CompanyType);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(vm);
@@ -81,10 +86,11 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var companyType = await _context.CompanyTypes
-                .Include(t => t.CompanyTypeName)
-                .ThenInclude(t => t.Translations)
-                .SingleOrDefaultAsync(m => m.CompanyTypeId == id);
+            var companyType = await _uow.CompanyTypes.GetSingle(id.Value);
+                //await _context.CompanyTypes
+                //.Include(t => t.CompanyTypeName)
+                //.ThenInclude(t => t.Translations)
+                //.SingleOrDefaultAsync(m => m.CompanyTypeId == id);
             if (companyType == null)
             {
                 return NotFound();
@@ -110,18 +116,20 @@ namespace WebApp.Areas.Admin.Controllers
             {
                 try
                 {
-                    vm.CompanyType.CompanyTypeName =
-                        _context.MultiLangStrings
-                        .Include(t => t.Translations)
-                        .FirstOrDefault(m =>
-                        m.MultiLangStringId == vm.CompanyType.CompanyTypeNameId) ?? new MultiLangString();
+                    vm.CompanyType.CompanyTypeName = await _uow.MultiLangStrings
+                        .FindSingleAsync(vm.CompanyType.CompanyTypeNameId)
+                        ?? new MultiLangString();
+                        //_context.MultiLangStrings
+                        //.Include(t => t.Translations)
+                        //.FirstOrDefault(m =>
+                        //m.MultiLangStringId == vm.CompanyType.CompanyTypeNameId) ?? new MultiLangString();
                     vm.CompanyType.CompanyTypeName.SetTranslation(vm.CompanyTypeName);
-                    _context.Update(vm.CompanyType);
-                    await _context.SaveChangesAsync();
+                    _uow.CompanyTypes.Update(vm.CompanyType);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CompanyTypeExists(vm.CompanyType.CompanyTypeId))
+                    if (! (await _uow.CompanyTypes.ExistsByPrimaryKeyAsync(vm.CompanyType.CompanyTypeId)))
                     {
                         return NotFound();
                     }
@@ -143,8 +151,9 @@ namespace WebApp.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var companyType = await _context.CompanyTypes.Include(t => t.CompanyTypeName).ThenInclude(t => t.Translations)
-                .SingleOrDefaultAsync(m => m.CompanyTypeId == id);
+            var companyType = await _uow.CompanyTypes.GetSingle(id.Value);
+                //_context.CompanyTypes.Include(t => t.CompanyTypeName).ThenInclude(t => t.Translations)
+                //.SingleOrDefaultAsync(m => m.CompanyTypeId == id);
             if (companyType == null)
             {
                 return NotFound();
@@ -158,15 +167,13 @@ namespace WebApp.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var companyType = await _context.CompanyTypes.SingleOrDefaultAsync(m => m.CompanyTypeId == id);
-            _context.CompanyTypes.Remove(companyType);
-            await _context.SaveChangesAsync();
+            var companyType = await _uow.CompanyTypes.GetSingle(id);
+                //context.CompanyTypes.SingleOrDefaultAsync(m => m.CompanyTypeId == id);
+            _uow.CompanyTypes.Remove(companyType);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CompanyTypeExists(int id)
-        {
-            return _context.CompanyTypes.Any(e => e.CompanyTypeId == id);
-        }
+
     }
 }

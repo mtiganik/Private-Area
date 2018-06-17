@@ -890,12 +890,19 @@ namespace Helpers
                 }
             }
 
-            var userName = "admin@eesti.ee";
+            //var userName = "admin@eesti.ee";
             var userPass = "qwerty";
 
             if (!context.ApplicationUser.Any())
             {
-                //var user0 = new ApplicationUser { UserName = userName, Email = userName };
+                //var user0 = new ApplicationUser {
+                //    UserName = userName,
+                //    Email = userName,
+                //    FirstName = "Admin",
+                //    LastName = "Admin",
+                //    Department = context.Departments.Where(u => u.DepartmentId == 2).Single(),
+                //    UserStatus = context.UserStatuses.Where(u => u.UserStatusId == 3).Single(),
+                //};
                 //var res = userManager.CreateAsync(user0, userPass).Result;
                 //if (res == IdentityResult.Success)
                 //{
@@ -905,7 +912,7 @@ namespace Helpers
                 //    }
                 //}
 
-                //var user1 = context.ApplicationUser.Where(u => u.UserName == "mtiganik@gmail.com").Single();
+               // var user1 = context.ApplicationUser.Where(u => u.UserName == "mtiganik@gmail.com").Single();
                 var user1 = new ApplicationUser
                 {
                     FirstName = "Mihkel",
@@ -1011,6 +1018,23 @@ namespace Helpers
 
                 context.Positions.Add(new Position
                 {
+                    Project = context.Projects.Where(u => u.ProjectName == "Summer Days 2018").Single(),
+                    PositionName = context.PositionNames.Where(u => u.PositionNameId == 5).Single(),
+                    ApplicationUser = context.ApplicationUser.Where(u => u.UserName == "mtiganik@gmail.com").Single(),
+                    IsMarketer = false,
+                });
+
+                context.Positions.Add(new Position
+                {
+                    Project = context.Projects.Where(u => u.ProjectName == "Carreer Day 2017").Single(),
+                    PositionName = context.PositionNames.Where(u => u.PositionNameId == 2).Single(),
+                    ApplicationUser = context.ApplicationUser.Where(u => u.UserName == "mtiganik@gmail.com").Single(),
+                    IsMarketer = true,
+                });
+
+
+                context.Positions.Add(new Position
+                {
                     Project = context.Projects.Where(u => u.ProjectName == "Võti Tulevikku 2018").Single(),
                     PositionName = context.PositionNames.Where(u => u.PositionNameId == 4).Single(),
                     ApplicationUser = context.ApplicationUser.Where(u => u.UserName == "LiisaKern@gmail.com").Single(),
@@ -1025,13 +1049,6 @@ namespace Helpers
                     IsMarketer = false,
                 });
 
-                context.Positions.Add(new Position
-                {
-                    Project = context.Projects.Where(u => u.ProjectName == "Summer Days 2018").Single(),
-                    PositionName = context.PositionNames.Where(u => u.PositionNameId == 5).Single(),
-                    ApplicationUser = context.ApplicationUser.Where(u => u.UserName == "mtiganik@gmail.com").Single(),
-                    IsMarketer = false,
-                });
 
                 context.Positions.Add(new Position
                 {
@@ -1049,13 +1066,7 @@ namespace Helpers
                     IsMarketer = true,
                 });
 
-                context.Positions.Add(new Position
-                {
-                    Project = context.Projects.Where(u => u.ProjectName == "Carreer Day 2017").Single(),
-                    PositionName = context.PositionNames.Where(u => u.PositionNameId == 2).Single(),
-                    ApplicationUser = context.ApplicationUser.Where(u => u.UserName == "mtiganik@gmail.com").Single(),
-                    IsMarketer = true,
-                });
+              
 
                 context.SaveChangesAsync().Wait();
             }

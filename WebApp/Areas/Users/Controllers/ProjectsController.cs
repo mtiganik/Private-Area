@@ -9,6 +9,7 @@ using DAL.App.EF;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using WebApp.Areas.Users.Models;
+using DAL.App.Interfaces;
 
 namespace WebApp.Areas.Users.Controllers
 {
@@ -16,36 +17,40 @@ namespace WebApp.Areas.Users.Controllers
     [Area("Users")]
     public class ProjectsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public ProjectsController(ApplicationDbContext context)
+        public ProjectsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
 
         // GET: Projects
         public async Task<IActionResult> Index(int? id)
         {
             var vm = new ProjectsIndexViewModel();
-            vm.Projects = await _context.Projects
-                .Include(i => i.ProjectType)
-                .Include(i => i.Positions)
-                .OrderByDescending(i => i.ProjectStartDate)
-                .AsNoTracking()
-                .ToListAsync();
+            vm.Projects = await _uow.Projects.AllAsync();
+                //_context.Projects
+                //.Include(i => i.ProjectType)
+                //.Include(i => i.Positions)
+                //.OrderByDescending(i => i.ProjectStartDate)
+                //.AsNoTracking()
+                //.ToListAsync();
 
             if(id != null)
             {
-                vm.SelectedProject =await _context.Projects.Where(i => i.ProjectId == id).SingleOrDefaultAsync();
-                vm.Positions = await _context.Positions.Where(i => i.ProjectId == id)
-                    .Include(i => i.ApplicationUser)
-                    .Include(i => i.PositionName)
-                        .ThenInclude(i => i.PositionNameName)
-                            .ThenInclude(i => i.Translations)
-                    .AsNoTracking()
-                    .ToListAsync();
+                vm.SelectedProject = await _uow.Projects.GetSingle(id.Value);
+                //_context.Projects.Where(i => i.ProjectId == id).SingleOrDefaultAsync();
+                vm.Positions = await _uow.Positions.GetPositionsForProject(id.Value);
+                    //_context.Positions.Where(i => i.ProjectId == id)
+                    //.Include(i => i.ApplicationUser)
+                    //.Include(i => i.PositionName)
+                    //    .ThenInclude(i => i.PositionNameName)
+                    //        .ThenInclude(i => i.Translations)
+                    //.AsNoTracking()
+                    //.ToListAsync();
                 vm.ProjectsId = id.Value;
-                //ViewData["Project"] = id;
+
             }
 
             return View(vm);
@@ -60,24 +65,27 @@ namespace WebApp.Areas.Users.Controllers
                 return NotFound();
             }
             var vm = new ProjectDetailsViewModel();
-            vm.SelectedProject = await _context.Projects.Where(U => U.ProjectId == id)
-                .Include(i => i.Positions)
-                    .ThenInclude(i => i.PositionName)
-                        .ThenInclude(i => i.PositionNameName)
-                            .ThenInclude(i => i.Translations)
-                .Include(i => i.Positions)
-                    .ThenInclude(i => i.ApplicationUser)
-                .Include(i => i.ProjectType)
-                .Include(i => i.CompanyProjects)
-                    .ThenInclude(i => i.Company)
-                .SingleOrDefaultAsync();
+            vm.SelectedProject = await _uow.Projects.GetSingleEnhancedAsync(id.Value);
+
+
+                //_context.Projects.Where(U => U.ProjectId == id)
+                //.Include(i => i.Positions)
+                //    .ThenInclude(i => i.PositionName)
+                //        .ThenInclude(i => i.PositionNameName)
+                //            .ThenInclude(i => i.Translations)
+                //.Include(i => i.Positions)
+                //    .ThenInclude(i => i.ApplicationUser)
+                //.Include(i => i.ProjectType)
+                //.Include(i => i.CompanyProjects)
+                //    .ThenInclude(i => i.Company)
+                //.SingleOrDefaultAsync();
 
             if (vm.SelectedProject == null)
             {
                 return NotFound();
             }
 
-            vm.CompaniesSelectList = new SelectList(_context.Companies, nameof(Company.CompanyId), nameof(Company.CompanyName) );
+            vm.CompaniesSelectList = new SelectList(_uow.Companies.All(), nameof(Company.CompanyId), nameof(Company.CompanyName) );
             return View(vm);
         }
 
@@ -110,12 +118,12 @@ namespace WebApp.Areas.Users.Controllers
             if (ModelState.IsValid)
             {
                 companyProject.ProjectId = id;
-                _context.Add(companyProject);
-                await _context.SaveChangesAsync();
+                _uow.CompanyProjects.Add(companyProject);
+                await _uow.SaveChangesAsync();
                 return  RedirectToAction("Details", new {  id });
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "CompanyId", "CompanyId", companyProject.CompanyId);
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "ProjectId", "ProjectId", companyProject.ProjectId);
+            ViewData["CompanyId"] = new SelectList(_uow.Companies.All(), "CompanyId", "CompanyId", companyProject.CompanyId);
+            ViewData["ProjectId"] = new SelectList(_uow.Projects.All(), "ProjectId", "ProjectId", companyProject.ProjectId);
             return View(companyProject);
         }
 

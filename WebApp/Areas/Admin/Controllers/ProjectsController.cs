@@ -9,6 +9,7 @@ using DAL.App.EF;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using WebApp.Areas.Admin.Models;
+using DAL.App.Interfaces;
 
 namespace WebApp.Area.Admin.Controllers
 {
@@ -16,11 +17,12 @@ namespace WebApp.Area.Admin.Controllers
     [Area("Admin")]
     public class ProjectsController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        //private readonly ApplicationDbContext _context;
+        private readonly IAppUnitOfWork _uow;
 
-        public ProjectsController(ApplicationDbContext context)
+        public ProjectsController(IAppUnitOfWork uow)
         {
-            _context = context;
+            _uow = uow;
         }
         
 
@@ -30,27 +32,13 @@ namespace WebApp.Area.Admin.Controllers
         {
             var vm = new ProjectsIndexData();
 
-            vm.Projects = await _context.Projects
-                .Include(i => i.ProjectType)
-                .Include(i => i.Positions)
-                    .ThenInclude(i => i.ApplicationUser)
-                .Include(i => i.Positions)
-                    .ThenInclude(i => i.PositionName)
-                .AsNoTracking()
-                .OrderBy(i => i.ProjectStartDate)
-                .ToListAsync();
-
+            vm.Projects = await _uow.Projects.AllAsync();
 
             if (id != null)
             {
                 vm.ProjectId = id.Value;
-                vm.Positions = _context.Positions.Where(i => i.ProjectId == id.Value)
-                    .Include(i => i.ApplicationUser)
-                    .Include(i => i.PositionName)
-                        .ThenInclude(t => t.PositionNameName)
-                            .ThenInclude(t => t.Translations)
-                    .Include(i => i.Project);
-                vm.SelectedProject = _context.Projects.Where(i => i.ProjectId == id.Value).SingleOrDefault();
+                vm.Positions = await _uow.Positions.GetPositionsForProject(id.Value);
+                vm.SelectedProject = await _uow.Projects.GetSingle(id.Value);
 
             }
 
@@ -65,9 +53,7 @@ namespace WebApp.Area.Admin.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Projects
-                .Include(p => p.ProjectType)
-                .SingleOrDefaultAsync(m => m.ProjectId == id);
+            var project = await _uow.Projects.GetSingleWithProjectType(id.Value);
             if (project == null)
             {
                 return NotFound();
@@ -80,7 +66,8 @@ namespace WebApp.Area.Admin.Controllers
         public IActionResult Create()
         {
             var vm = new ProjectsCreateEditVM();
-            vm.ProjectTypeSelectList = new SelectList(_context.ProjectTypes, nameof(ProjectType.ProjectTypeId), nameof(ProjectType.ProjectTypeName));
+            vm.ProjectTypeSelectList = new SelectList(_uow.ProjectTypes.All(), nameof(ProjectType.ProjectTypeId), nameof(ProjectType.ProjectTypeName));
+
             return View(vm);
         }
 
@@ -91,11 +78,11 @@ namespace WebApp.Area.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(vm.Project);
-                await _context.SaveChangesAsync();
+                _uow.Projects.Add(vm.Project);
+                await _uow.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            vm.ProjectTypeSelectList = new SelectList(_context.ProjectTypes, nameof(ProjectType.ProjectTypeId), nameof(ProjectType.ProjectTypeName), vm.Project.ProjectTypeId);
+            vm.ProjectTypeSelectList = new SelectList(_uow.ProjectTypes.All(), nameof(ProjectType.ProjectTypeId), nameof(ProjectType.ProjectTypeName), vm.Project.ProjectTypeId);
             return View(vm);
         }
 
@@ -107,14 +94,14 @@ namespace WebApp.Area.Admin.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Projects.SingleOrDefaultAsync(m => m.ProjectId == id);
+            var project = await _uow.Projects.GetSingle(id.Value);
             if (project == null)
             {
                 return NotFound();
             }
             var vm = new ProjectsCreateEditVM();
             vm.Project = project;
-            vm.ProjectTypeSelectList = new SelectList(_context.ProjectTypes, nameof(ProjectType.ProjectTypeId), nameof(ProjectType.ProjectTypeName), project.ProjectTypeId);
+            vm.ProjectTypeSelectList = new SelectList(_uow.ProjectTypes.All(), nameof(ProjectType.ProjectTypeId), nameof(ProjectType.ProjectTypeName), project.ProjectTypeId);
             return View(vm);
         }
 
@@ -132,12 +119,12 @@ namespace WebApp.Area.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(vm.Project);
-                    await _context.SaveChangesAsync();
+                    _uow.Projects.Update(vm.Project);
+                    await _uow.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProjectExists(vm.Project.ProjectId))
+                    if (!(await _uow.Projects.ExistsByPrimaryKeyAsync(vm.Project.ProjectId)))
                     {
                         return NotFound();
                     }
@@ -148,7 +135,7 @@ namespace WebApp.Area.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            vm.ProjectTypeSelectList = new SelectList(_context.ProjectTypes, nameof(Project.ProjectTypeId), nameof(Project.ProjectName), vm.Project.ProjectTypeId);
+            vm.ProjectTypeSelectList = new SelectList(_uow.ProjectTypes.All(), nameof(Project.ProjectTypeId), nameof(Project.ProjectName), vm.Project.ProjectTypeId);
             return View(vm);
         }
 
@@ -160,9 +147,7 @@ namespace WebApp.Area.Admin.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Projects
-                .Include(p => p.ProjectType)
-                .SingleOrDefaultAsync(m => m.ProjectId == id);
+            var project = await _uow.Projects.GetSingleWithProjectType(id.Value);
             if (project == null)
             {
                 return NotFound();
@@ -176,15 +161,11 @@ namespace WebApp.Area.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var project = await _context.Projects.SingleOrDefaultAsync(m => m.ProjectId == id);
-            _context.Projects.Remove(project);
-            await _context.SaveChangesAsync();
+            var project = await _uow.Projects.GetSingle(id);
+            _uow.Projects.Remove(project);
+            await _uow.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProjectExists(int id)
-        {
-            return _context.Projects.Any(e => e.ProjectId == id);
-        }
     }
 }
