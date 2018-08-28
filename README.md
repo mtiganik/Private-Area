@@ -1,10 +1,10 @@
 # Private-Area
-EF Core MVC project. Designed as private area for marketers to keep track of companies
+EF Core MVC project. <br>Designed as private area for marketers to keep track of companies
 
-This project contains:
-  -13 Models
-  -3 Areas (Admin, Public and Private Area)
-  -Multilanguage support
-  -CRUD Database access for each Model whit built-in DB initialization
-  -UOW DAL for every Model
-  -User Registration. Authorization and Authentication
+This project contains:<br>
+  -13 Models<br>
+  -3 Areas (Admin, Public and Private Area)<br>
+  -Multilanguage support<br>
+  -CRUD Database access for each Model whit built-in DB initialization<br>
+  -UOW DAL for every Model<br>
+  -User Registration. Authorization and Authentication<br>
